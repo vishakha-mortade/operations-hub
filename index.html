@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IG International - Operations Portal</title>
+    <style>
+        :root {
+            --primary: #1e293b;
+            --accent: #2563eb;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding: 40px 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        p.subtitle {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 28px 0 14px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px 20px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .badge {
+            font-size: 0.725rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+
+        .card-desc {
+            font-size: 0.875rem;
+            color: var(--text-sub);
+            margin-bottom: 12px;
+        }
+
+        .card-footer {
+            font-size: 0.775rem;
+            color: var(--accent);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-footer span {
+            transition: transform 0.2s;
+        }
+
+        .card:hover .card-footer span {
+            transform: translateX(3px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>IG Operations & Claims Hub</h1>
+            <p class="subtitle">Quick access portal for active reporting tools, spreadsheets, and control panels.</p>
+        </header>
+
+        <!-- SECTION 1: QUALITY & CLAIMS CONTROL -->
+        <div class="section-title">Quality & Claims Control</div>
+        <div class="grid">
+
+            <a href="file:///C:/Users/IGIPLCASHIER/Downloads/IG_Claims_QC_Dashboard%20rev%205.html" target="_blank" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="card-title">IG Claims & QC Control Room</span>
+                        <span class="badge">Local HTML</span>
+                    </div>
+                    <div class="card-desc">Main control room monitoring open claims aging, container breakdowns, and QC releases[cite: 4].</div>
+                </div>
+                <div class="card-footer">Open Control Room <span>&rarr;</span></div>
+            </a>
+
+            <a href="https://datastudio.google.com/u/0/reporting/e77bff39-012e-47f4-8689-7d634060930d/page/p_sx9nrm9l5d" target="_blank" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="card-title">Open Claims Dashboard</span>
+                        <span class="badge">Looker Studio</span>
+                    </div>
+                    <div class="card-desc">Yearly ticket count trends, claim status breakdown, and container volume overview[cite: 1].</div>
+                </div>
+                <div class="card-footer">Launch Report <span>&rarr;</span></div>
+            </a>
+
+            <a href="https://agri.qcone.com/reports/10013297" target="_blank" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="card-title">QC One Inspection Portal</span>
+                        <span class="badge">Web App</span>
+                    </div>
+                    <div class="card-desc">Individual container inspection reports, quality grades, defect alerts, and lab logs[cite: 6].</div>
+                </div>
+                <div class="card-footer">View QC Report <span>&rarr;</span></div>
+            </a>
+
+        </div>
+
+        <!-- SECTION 2: REGISTERS & TEAM SYNC -->
+        <div class="section-title">Data Registers & Team Sync</div>
+        <div class="grid">
+
+            <a href="https://app.notion.com/p/iginternational/Claim-s-deck-e722baf654d5437bbe2eeb0572273d5a#14034e88d8f38004a57bc74a66e373d0" target="_blank" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="card-title">Claim's deck (Notion Hub)</span>
+                        <span class="badge">Notion</span>
+                    </div>
+                    <div class="card-desc">Quality Claims WhatsApp team workspace tracking live database views, ticket counts, and team views.</div>
+                </div>
+                <div class="card-footer">Open Notion Deck <span>&rarr;</span></div>
+            </a>
+
+            <a href="file:///C:/Users/IGIPLCASHIER/Downloads/Claims_Register_TeamSync_V2-1%20(2).html" target="_blank" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="card-title">Claims Register (TeamSync App)</span>
+                        <span class="badge">Local Web App</span>
+                    </div>
+                    <div class="card-desc">Data entry form to create, sync, and update claims, party information, and defect entries[cite: 5].</div>
+                </div>
+                <div class="card-footer">Open TeamSync <span>&rarr;</span></div>
+            </a>
+
+            <a href="https://docs.google.com/spreadsheets/d/1AMQlJRpIBUEvm4V9ugZS5BWutHSrvJL-RIPSYCWNnYY/edit?gid=294814046#gid=294814046" target="_blank" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="card-title">Claim Register Sheet</span>
+                        <span class="badge">Google Sheets</span>
+                    </div>
+                    <div class="card-desc">Live Master Excel register tracking cost sheet stages, relationship managers, and ticket numbers[cite: 3].</div>
+                </div>
+                <div class="card-footer">Open Sheet <span>&rarr;</span></div>
+            </a>
+
+        </div>
+
+        <!-- SECTION 3: IMPORT & LOGISTICS -->
+        <div class="section-title">Import & Logistics</div>
+        <div class="grid">
+
+            <a href="https://datastudio.google.com/reporting/b9a70b57-68cc-4481-8391-f81d664ba095/page/d1KXC" target="_blank" class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="card-title">Import Management Dashboard</span>
+                        <span class="badge">Looker Studio</span>
+                    </div>
+                    <div class="card-desc">Overview of total PO statuses, product varieties, shipping lines, and port arrivals[cite: 2].</div>
+                </div>
+                <div class="card-footer">Launch Dashboard <span>&rarr;</span></div>
+            </a>
+
+        </div>
+    </div>
+
+</body>
+</html>
