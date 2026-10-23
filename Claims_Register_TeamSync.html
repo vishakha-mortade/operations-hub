@@ -1,902 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Claims Register</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #eef1f5; color: #1e293b; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claims Register - TeamSync App</title>
+    <style>
+        :root {
+            --bg-main: #f1f5f9;
+            --header-bg: #0f172a;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-blue: #2563eb;
+            --accent-yellow: #eab308;
+            --accent-green: #10b981;
+        }
 
-  header { background: #0f2a4a; color: #fff; padding: 14px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 20; }
-  header h1 { font-size: 19px; letter-spacing: -0.2px; }
-  header h1 span { color: #f0b429; }
-  .substat { font-size: 12px; color: #cbd5e1; margin-top: 2px; }
-  .hbtns { display: flex; gap: 8px; flex-wrap: wrap; }
-  .hbtn { border: none; border-radius: 5px; padding: 9px 16px; font-size: 13px; font-weight: 600; cursor: pointer; background: rgba(255,255,255,.12); color: #fff; transition: .15s; }
-  .hbtn:hover { background: rgba(255,255,255,.25); }
-  .hbtn.active { background: #f0b429; color: #0f2a4a; }
-  .hbtn.export { background: #059669; }
-  .hbtn.export:hover { background: #10b981; }
-  .hbtn.import { background: #2563eb; }
-  .hbtn.import:hover { background: #3b82f6; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-main); color: var(--text-primary); padding-bottom: 60px; }
 
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 22px; }
+        /* Top Bar */
+        .app-header {
+            background-color: var(--header-bg);
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
 
-  .section { background: #fff; border: 1px solid #dbe1ea; border-radius: 8px; margin-bottom: 14px; overflow: hidden; }
-  .sec-head { width: 100%; text-align: left; background: #f6f8fb; border: none; padding: 12px 18px; font-size: 13.5px; font-weight: 700; color: #0f2a4a; cursor: pointer; display: flex; justify-content: space-between; }
-  .sec-head:hover { background: #eef2f8; }
-  .sec-body { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; padding: 18px; }
-  .sec-body.hidden { display: none; }
+        .header-title-area h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-  .field label { display: block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #64748b; margin-bottom: 4px; }
-  .field label .req { color: #dc2626; }
-  .field input, .field select, .field textarea { width: 100%; padding: 8px 10px; font-size: 13.5px; border: 1px solid #cbd5e1; border-radius: 5px; background: #fff; color: #1e293b; font-family: inherit; }
-  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #f0b429; box-shadow: 0 0 0 2px rgba(240,180,41,.25); }
-  .field.wide { grid-column: 1 / -1; }
+        .header-title-area h1 span.dot {
+            color: var(--accent-yellow);
+        }
 
-  .actions { display: flex; gap: 10px; margin-top: 6px; }
-  .btn-primary { background: #0f2a4a; color: #fff; border: none; border-radius: 5px; padding: 11px 26px; font-size: 13.5px; font-weight: 600; cursor: pointer; }
-  .btn-primary:hover { background: #173a63; }
-  .btn-secondary { background: #fff; color: #334155; border: 1px solid #cbd5e1; border-radius: 5px; padding: 11px 26px; font-size: 13.5px; font-weight: 600; cursor: pointer; }
-  .btn-secondary:hover { background: #f1f5f9; }
+        .header-stats {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-  .editbar { background: #fef3c7; border: 1px solid #fcd34d; border-radius: 6px; padding: 11px 16px; font-size: 13.5px; color: #92400e; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
-  .editbar a { color: #b45309; cursor: pointer; text-decoration: underline; }
+        .status-sync {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #4ade80;
+            font-weight: 500;
+        }
 
-  .filterbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; background: #fff; border: 1px solid #dbe1ea; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
-  .filterbar .fitem { display: flex; flex-direction: column; gap: 4px; }
-  .filterbar label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #64748b; }
-  .filterbar input, .filterbar select { padding: 8px 10px; font-size: 13px; border: 1px solid #cbd5e1; border-radius: 5px; background: #fff; color: #1e293b; min-width: 150px; }
-  .filterbar input:focus, .filterbar select:focus { outline: none; border-color: #f0b429; box-shadow: 0 0 0 2px rgba(240,180,41,.25); }
-  .filterbar .clearbtn { padding: 8px 16px; font-size: 12.5px; font-weight: 600; border: 1px solid #cbd5e1; border-radius: 5px; background: #f8fafc; color: #475569; cursor: pointer; }
-  .filterbar .clearbtn:hover { background: #eef2f8; }
-  .filtercount { font-size: 12px; color: #64748b; margin-bottom: 10px; }
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+        }
 
-  .tablewrap { background: #fff; border: 1px solid #dbe1ea; border-radius: 8px; overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead th { background: #0f2a4a; color: #fff; text-align: left; padding: 10px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
-  tbody td { padding: 9px 12px; border-top: 1px solid #eef1f5; vertical-align: middle; }
-  tbody tr:nth-child(even) { background: #f8fafc; }
-  .refno { font-family: Consolas, monospace; font-size: 12px; font-weight: 700; color: #0f2a4a; white-space: nowrap; }
-  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
-  .badge.open { background: #fef3c7; color: #92400e; }
-  .badge.done { background: #d1fae5; color: #065f46; }
-  .badge.none { background: #e2e8f0; color: #475569; }
-  .rowbtn { background: none; border: none; cursor: pointer; font-size: 12px; font-weight: 600; margin-right: 8px; }
-  .rowbtn.edit { color: #0f2a4a; } .rowbtn.edit:hover { text-decoration: underline; }
-  .rowbtn.del  { color: #dc2626; } .rowbtn.del:hover { text-decoration: underline; }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-  .empty { background: #fff; border: 1px solid #dbe1ea; border-radius: 8px; padding: 48px; text-align: center; color: #64748b; font-size: 14px; }
+        .btn {
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.825rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
 
-  #toast { position: fixed; top: 18px; right: 18px; z-index: 100; background: #0f172a; color: #fff; padding: 12px 18px; border-radius: 6px; font-size: 13.5px; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,.25); display: none; }
-  #toast.error { background: #dc2626; }
+        .btn:hover { opacity: 0.9; }
 
-  .backupnote { font-size: 12px; color: #64748b; margin-top: 18px; text-align: center; }
-  .backupnote a { color: #0f2a4a; cursor: pointer; text-decoration: underline; }
+        .btn-sync { background-color: #334155; color: white; }
+        .btn-refresh { background-color: #3b82f6; color: white; }
+        .btn-new { background-color: var(--accent-yellow); color: #0f172a; }
+        .btn-reg { background-color: #1e293b; color: white; border: 1px solid #334155; }
+        .btn-import { background-color: #2563eb; color: white; }
+        .btn-export { background-color: #059669; color: white; }
 
-  @media (max-width: 640px) { .sec-body { grid-template-columns: 1fr 1fr; } header h1 { font-size: 16px; } }
-</style>
+        /* Container & Accordion Cards */
+        .main-container {
+            max-width: 1100px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        .form-section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .section-header {
+            padding: 14px 20px;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--header-bg);
+            user-select: none;
+        }
+
+        .section-header:hover { background-color: #f8fafc; }
+
+        .section-content {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.725rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .form-group label span.req { color: #ef4444; }
+
+        .form-control {
+            padding: 9px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            outline: none;
+            background-color: #ffffff;
+            color: var(--text-primary);
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-save {
+            background-color: #0f172a;
+            color: white;
+            padding: 10px 24px;
+            font-size: 0.9rem;
+        }
+
+        .btn-clear {
+            background-color: #ffffff;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        .back-nav {
+            margin-bottom: 16px;
+            display: inline-block;
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>Claims Register <span>·</span></h1>
-    <div class="substat" id="substat">0 records</div>
-  </div>
-  <div class="hbtns">
-    <button class="hbtn" onclick="setupSync()" id="syncSetupBtn">&#9881; Sync</button>
-    <button class="hbtn" onclick="syncPullAll(true)">&#128260; Refresh</button>
-    <button class="hbtn active" id="tabEntry" onclick="switchView('entry')">+ New Entry</button>
-    <button class="hbtn" id="tabRegister" onclick="switchView('register')">Register (<span id="regCount">0</span>)</button>
-    <button class="hbtn import" onclick="document.getElementById('importFile').click()">&#11014; Import Excel</button>
-    <button class="hbtn export" onclick="exportExcel()">&#11015; Export Excel</button>
-    <input type="file" id="importFile" accept=".xlsx,.xls,.csv" style="display:none" onchange="importExcel(event)">
-  </div>
-</header>
+    <!-- Header Section -->
+    <div class="app-header">
+        <div class="header-title-area">
+            <h1>Claims Register<span class="dot">•</span></h1>
+            <div class="header-stats">
+                4411 records · Open claims: 468 containers · Total: 5509 · 
+                <span class="status-sync"><span class="sync-dot"></span> Synced to Google Sheet</span>
+            </div>
+        </div>
 
-<div class="wrap">
-  <div id="viewEntry">
-    <div class="editbar" id="editbar" style="display:none">
-      <span>Editing <strong id="editingRefLabel"></strong></span>
-      <a onclick="cancelEdit()">Cancel edit</a>
+        <div class="header-actions">
+            <button class="btn btn-sync">⚙ Sync</button>
+            <button class="btn btn-refresh">🔄 Refresh</button>
+            <button class="btn btn-new">+ New Entry</button>
+            <button class="btn btn-reg">Register (4411)</button>
+            <button class="btn btn-import">⬆ Import Excel</button>
+            <button class="btn btn-export">⬇ Export Excel</button>
+        </div>
     </div>
-    <div id="formSections"></div>
-    <div class="actions">
-      <button class="btn-primary" id="saveBtn" onclick="saveRecord()">Save Record</button>
-      <button class="btn-secondary" onclick="clearForm()">Clear</button>
+
+    <!-- Main Content Form Area -->
+    <div class="main-container">
+        <a href="index.html" class="back-nav">&larr; Back to Main Portal</a>
+
+        <!-- Section 1: Party & Ownership -->
+        <div class="form-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span>Party & Ownership</span>
+                <span class="icon">&minus;</span>
+            </div>
+            <div class="section-content">
+                <div class="form-group">
+                    <label>PARTY NAME <span class="req">*</span></label>
+                    <input type="text" class="form-control" placeholder="Type to search or add new...">
+                </div>
+                <div class="form-group">
+                    <label>PARTY TYPE</label>
+                    <select class="form-control">
+                        <option>— Select —</option>
+                        <option>Supplier</option>
+                        <option>Consignee</option>
+                        <option>Shipping Line</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>COUNTRY</label>
+                    <input type="text" class="form-control" placeholder="Type to search or add new...">
+                </div>
+                <div class="form-group">
+                    <label>LOCATION</label>
+                    <input type="text" class="form-control" placeholder="Type to search or add new...">
+                </div>
+                <div class="form-group">
+                    <label>RELATIONSHIP MANAGER</label>
+                    <input type="text" class="form-control" placeholder="Type to search or add new...">
+                </div>
+                <div class="form-group">
+                    <label>CLAIMS OWNER</label>
+                    <input type="text" class="form-control" placeholder="Type to search or add new...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Shipment -->
+        <div class="form-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span>Shipment</span>
+                <span class="icon">+</span>
+            </div>
+            <div class="section-content" style="display: none;">
+                <div class="form-group">
+                    <label>CONTAINER NUMBER</label>
+                    <input type="text" class="form-control" placeholder="e.g. SUDU1234567">
+                </div>
+                <div class="form-group">
+                    <label>BL NUMBER</label>
+                    <input type="text" class="form-control" placeholder="e.g. BL9082341">
+                </div>
+                <div class="form-group">
+                    <label>PORT OF DISCHARGE</label>
+                    <input type="text" class="form-control" placeholder="e.g. Nhava Sheva">
+                </div>
+                <div class="form-group">
+                    <label>VARIETY / COMMODITY</label>
+                    <input type="text" class="form-control" placeholder="e.g. Kiwifruit, Apples">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Claim Details -->
+        <div class="form-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span>Claim Details</span>
+                <span class="icon">+</span>
+            </div>
+            <div class="section-content" style="display: none;">
+                <div class="form-group">
+                    <label>CLAIM TYPE</label>
+                    <select class="form-control">
+                        <option>Quality Claim</option>
+                        <option>Short Quantity Claim</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>CLAIM STATUS</label>
+                    <select class="form-control">
+                        <option>Open</option>
+                        <option>Closed</option>
+                        <option>Pending Cost Sheet</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>DEFECT TYPE</label>
+                    <input type="text" class="form-control" placeholder="e.g. Rot, Bruising, Temperature Spike">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Financials -->
+        <div class="form-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span>Financials</span>
+                <span class="icon">+</span>
+            </div>
+            <div class="section-content" style="display: none;">
+                <div class="form-group">
+                    <label>CLAIM AMOUNT ($)</label>
+                    <input type="number" class="form-control" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>SETTLED AMOUNT ($)</label>
+                    <input type="number" class="form-control" placeholder="0.00">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Detention, Closure & Remarks -->
+        <div class="form-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span>Detention, Closure & Remarks</span>
+                <span class="icon">+</span>
+            </div>
+            <div class="section-content" style="display: none;">
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label>REMARKS / NOTES</label>
+                    <textarea class="form-control" rows="3" placeholder="Enter additional notes or claim summary..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Buttons -->
+        <div class="form-actions">
+            <button class="btn btn-save">Save Record</button>
+            <button class="btn btn-clear">Clear</button>
+        </div>
+
     </div>
-  </div>
 
-  <div id="viewRegister" style="display:none">
-    <div class="filterbar">
-      <div class="fitem" style="flex:1; min-width:200px">
-        <label>Search</label>
-        <input id="searchbox" type="text" placeholder="Ref no., ticket, party, container, product&hellip;" oninput="renderTable()" style="width:100%">
-      </div>
-      <div class="fitem">
-        <label>Status</label>
-        <select id="filterStatus" onchange="renderTable()">
-          <option value="">All</option>
-          <option value="open">Open</option>
-          <option value="closed">Closed</option>
-        </select>
-      </div>
-      <div class="fitem">
-        <label>Country</label>
-        <select id="filterCountry" onchange="renderTable()"><option value="">All countries</option></select>
-      </div>
-      <div class="fitem">
-        <label>Brand</label>
-        <select id="filterBrand" onchange="renderTable()"><option value="">All brands</option></select>
-      </div>
-      <div class="fitem">
-        <label>Nature Of Claim</label>
-        <select id="filterNature" onchange="renderTable()"><option value="">All</option></select>
-      </div>
-      <div class="fitem">
-        <label>Claim Date From</label>
-        <input id="filterFrom" type="date" onchange="renderTable()">
-      </div>
-      <div class="fitem">
-        <label>Claim Date To</label>
-        <input id="filterTo" type="date" onchange="renderTable()">
-      </div>
-      <button class="clearbtn" onclick="clearFilters()">Clear filters</button>
-    </div>
-    <div class="filtercount" id="filterCount"></div>
-    <div id="tableArea"></div>
-    <p class="backupnote">
-      Master data lives in the Google Sheet. &nbsp;
-      <a onclick="backupJSON()">Download backup</a> &middot; <a onclick="document.getElementById('restoreFile').click()">Restore backup</a>
-      <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restoreJSON(event)">
-    </p>
-  </div>
-</div>
-
-<div id="toast"></div>
-
-<script>
-// ---------------- Field configuration (V2 structure) ----------------
-const SECTIONS = [
-  { title: "Party & Ownership", fields: [
-    { key: "Party Name", type: "combo", req: true },
-    { key: "Party Type", type: "selectadd", options: [] },
-    { key: "Country", type: "combo" },
-    { key: "Location", type: "combo" },
-    { key: "Relationship Manager", type: "combo" },
-    { key: "Claims Owner", type: "combo" },
-  ]},
-  { title: "Shipment", fields: [
-    { key: "BL No.", type: "text" },
-    { key: "Container no.", type: "text" },
-    { key: "No. Of Containers", type: "number" },
-    { key: "ETA", type: "date" },
-    { key: "Product", type: "combo" },
-    { key: "Brand", type: "combo" },
-    { key: "Total Boxes", type: "number" },
-  ]},
-  { title: "Claim Details", fields: [
-    { key: "Claim Date", type: "date" },
-    { key: "Nature Of Claim", type: "selectadd", options: ["QUALITY","LOGISTICS","DETENTION CHARGES","SHORT QUANTITY","OTHER"] },
-    { key: "Claim Sub Group", type: "selectadd", options: ["BROKEN CRATES","CHARGES NOT AS PER CONTRAT","DETENTION","EXCESS PAYMENT","FSSAI/ PQ ISSUE","OTHERS","PORT PLUGIN CHARGES","QUALITY ISSUE","SECURITY DEPOSIT","SHORT QUANTITY"] },
-    { key: "Type Of issue", type: "selectadd", options: ["QUALITY ISSUE","SHORT QUANTITY","POOR QUALITY BINS","SECURITY DEPOSIT","DELAYED IN CLEARANCE","DELAYED IN CLEARANCE - TRANSPORT CFS","CHARGES NOT AGREED","QUALITY & CARTON/BOXES DAMAGED","DAMAGED BOXES/CRATES","IGM ISSUE","ACCIDENT/CONTAINER","DETENTION CHARGES","OLD DAMAGE"] },
-    { key: "Stage", type: "selectadd", options: ["CLOSED","COST SHEET SUBMITTED","COST SHEET PENDING"] },
-    { key: "Status", type: "select", options: ["Open","Closed"] },
-    { key: "Ticket no.", type: "text" },
-    { key: "Major Defects %", type: "number" },
-    { key: "Minor Defects %", type: "number" },
-    { key: "Short Qty", type: "number" },
-    { key: "Broken Crates", type: "number" },
-    { key: "Inspection Date", type: "date" },
-  ]},
-  { title: "Financials", fields: [
-    { key: "Base Currency", type: "select", options: ["USD","EUR","GBP","AED","ZAR","INR","Other"] },
-    { key: "Exchange Rate", type: "number" },
-    { key: "Claim Amount Base Currency", type: "number" },
-    { key: "Claim Amount (INR)", type: "number" },
-    { key: "Closed Amount Foreign Currency", type: "number" },
-    { key: "Closed Amount( INR)", type: "number" },
-    { key: "Closed Date", type: "date" },
-  ]},
-  { title: "Detention, Closure & Remarks", fields: [
-    { key: "ACTUAL DETENTION FREE DAYS RECEIVED", type: "number" },
-    { key: "ACTUAL DETENTION PAID", type: "number" },
-    { key: "Remarks", type: "textarea" },
-    { key: "Ticket Close Remark", type: "textarea" },
-  ]},
-];
-const ALL_FIELDS = SECTIONS.flatMap(s => s.fields.map(f => f.key));
-
-// Export column order — Ref No. first, then the requested layout
-const EXPORT_COLUMNS = [
-  "Ref No.","Party Name","ACTUAL DETENTION FREE DAYS RECEIVED","ACTUAL DETENTION PAID",
-  "Base Currency","BL No.","Claim Amount (INR)","Claim Amount Base Currency","Claim Date",
-  "Claim Sub Group","Created Time","Last Activity Time","Modified Time","Claims Owner",
-  "Closed Amount Foreign Currency","Closed Amount( INR)","Closed Date","Container no.","Country",
-  "ETA","Exchange Rate","Inspection Date","Location","Major Defects %","Minor Defects %",
-  "Nature Of Claim","No. Of Containers","Party Type","Product","Relationship Manager",
-  "Stage","Status","Ticket no.","Total Boxes","Remarks","Brand","Type Of issue",
-  "Short Qty","Broken Crates","Today","Aging","Week No","Ticket Close Remark"
-];
-
-// ---------------- State ----------------
-const LS_KEY = "claims-register-blank-records";
-let records = [];
-let editingRef = null;
-
-// ---------------- Offline cache: IndexedDB (large capacity, typically 500MB+) ----------------
-const DB_NAME = "claimsRegisterDB", DB_STORE = "kv";
-
-function idbOpen() {
-  return new Promise((res, rej) => {
-    const r = indexedDB.open(DB_NAME, 1);
-    r.onupgradeneeded = () => r.result.createObjectStore(DB_STORE);
-    r.onsuccess = () => res(r.result);
-    r.onerror = () => rej(r.error);
-  });
-}
-async function idbSet(key, val) {
-  const db = await idbOpen();
-  return new Promise((res, rej) => {
-    const tx = db.transaction(DB_STORE, "readwrite");
-    tx.objectStore(DB_STORE).put(val, key);
-    tx.oncomplete = () => res();
-    tx.onerror = () => rej(tx.error);
-  });
-}
-async function idbGet(key) {
-  const db = await idbOpen();
-  return new Promise((res, rej) => {
-    const tx = db.transaction(DB_STORE, "readonly");
-    const rq = tx.objectStore(DB_STORE).get(key);
-    rq.onsuccess = () => res(rq.result);
-    rq.onerror = () => rej(rq.error);
-  });
-}
-
-function persist() {
-  idbSet(LS_KEY, records).catch(() => { /* cache is optional — Google Sheet is the master copy */ });
-  refreshStats();
-}
-
-// ---------------- Google Sheets sync ----------------
-const SYNC_KEY = "claims-register-sync-url";
-let syncUrl = localStorage.getItem(SYNC_KEY) || "";
-let syncBusy = false;
-
-function setupSync() {
-  const v = prompt(
-    "Paste your Google Apps Script Web App URL here (it ends with /exec).\n\nTo disconnect sync, clear the box and press OK.",
-    syncUrl
-  );
-  if (v === null) return;
-  syncUrl = v.trim();
-  localStorage.setItem(SYNC_KEY, syncUrl);
-  if (syncUrl) { toast("Sync connected — loading data from Google Sheet…"); syncPullAll(true); }
-  else { toast("Sync disconnected — working locally only"); refreshStats(); }
-}
-
-async function apiPost(payload) {
-  const res = await fetch(syncUrl, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload)
-  });
-  return res.json();
-}
-
-function withComputed(rec) {
-  return { ...rec, "Today": todayStr(), "Aging": agingDays(rec), "Week No": isoWeek(rec["Claim Date"]) };
-}
-
-async function syncPullAll(showMsg) {
-  if (!syncUrl) { if (showMsg) toast("Sync not set up yet — click the ⚙ Sync button first", true); return; }
-  if (syncBusy) return;
-  syncBusy = true;
-  try {
-    const res = await fetch(syncUrl);
-    const data = await res.json();
-    if (Array.isArray(data)) {
-      records = data;
-      persist();
-      refreshCombos();
-      cleanCustomOptions();
-      rebuildSelectAdds();
-      prefillTicket(false);
-      if (document.getElementById("viewRegister").style.display !== "none") { populateFilters(); renderTable(); }
-      if (showMsg) toast("Refreshed — " + records.length + " record" + (records.length !== 1 ? "s" : "") + " from Google Sheet");
-    } else if (data && data.error) {
-      toast("Sheet error: " + data.error, true);
-    }
-  } catch (e) {
-    toast("Could not reach the Google Sheet — check internet or Sync URL", true);
-  }
-  syncBusy = false;
-}
-
-async function syncPushRecord(rec) {
-  if (!syncUrl) return;
-  try {
-    const r = await apiPost({ action: "save", record: withComputed(rec) });
-    if (r && r.error) toast("Saved locally, but Sheet returned an error", true);
-  } catch (e) { toast("Saved locally, but could not sync to Google Sheet", true); }
-}
-
-async function syncDelete(ref) {
-  if (!syncUrl) return;
-  try { await apiPost({ action: "delete", refNo: ref }); }
-  catch (e) { toast("Deleted locally, but could not sync to Google Sheet", true); }
-}
-
-async function syncBulk(recs) {
-  if (!syncUrl) return;
-  try {
-    await apiPost({ action: "bulk", records: recs.map(withComputed) });
-    toast("Import synced to Google Sheet");
-  } catch (e) { toast("Imported locally, but could not sync to Google Sheet", true); }
-}
-
-// ---------------- Custom dropdown options (persist user-added values) ----------------
-const OPT_KEY = "claims-register-blank-options";
-let customOptions = {};
-try { customOptions = JSON.parse(localStorage.getItem(OPT_KEY)) || {}; } catch(e) { customOptions = {}; }
-
-function optionsFor(f) {
-  // Standard options first, then every value actually used in the data, then manually added ones
-  const base = new Set(f.options);
-  const extras = new Set();
-  records.forEach(r => {
-    const v = String(r[f.key] || "").trim();
-    if (v && !base.has(v)) extras.add(v);
-  });
-  (customOptions[f.key] || []).forEach(o => { if (!base.has(o)) extras.add(o); });
-  return [...f.options, ...[...extras].sort()];
-}
-
-function rebuildSelectAdds() {
-  SECTIONS.flatMap(s => s.fields).filter(f => f.type === "selectadd").forEach(f => {
-    const sel = document.getElementById(fid(f.key));
-    if (sel) rebuildSelect(f, sel.value === "__add__" ? "" : sel.value);
-  });
-}
-function addCustomOption(fieldKey, value) {
-  if (!customOptions[fieldKey]) customOptions[fieldKey] = [];
-  if (!customOptions[fieldKey].includes(value)) {
-    customOptions[fieldKey].push(value);
-    sessionAdded.add(fieldKey + "|" + value);
-    localStorage.setItem(OPT_KEY, JSON.stringify(customOptions));
-  }
-}
-
-// Options added by hand this session are protected; others survive only if real records use them
-const sessionAdded = new Set();
-
-function cleanCustomOptions() {
-  let changed = false;
-  SECTIONS.flatMap(s => s.fields).filter(f => f.type === "selectadd").forEach(f => {
-    const list = customOptions[f.key];
-    if (!list || !list.length) return;
-    const used = new Set(records.map(r => String(r[f.key] || "").trim()).filter(Boolean));
-    const kept = list.filter(o => used.has(o) || sessionAdded.has(f.key + "|" + o));
-    if (kept.length !== list.length) {
-      customOptions[f.key] = kept;
-      changed = true;
-      const sel = document.getElementById(fid(f.key));
-      if (sel) rebuildSelect(f, sel.value === "__add__" ? "" : sel.value);
-    }
-  });
-  if (changed) localStorage.setItem(OPT_KEY, JSON.stringify(customOptions));
-}
-function rebuildSelect(f, selected) {
-  const sel = document.getElementById(fid(f.key));
-  sel.innerHTML = `<option value="">— Select —</option>` +
-    optionsFor(f).map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join("") +
-    `<option value="__add__">➕ Add new…</option>`;
-  sel.value = selected || "";
-}
-function handleSelectAdd(fieldKey) {
-  const f = SECTIONS.flatMap(s => s.fields).find(x => x.key === fieldKey);
-  const sel = document.getElementById(fid(fieldKey));
-  if (sel.value === "__add__") {
-    const v = prompt("Enter new option for \"" + fieldKey + "\":");
-    if (v && v.trim()) {
-      const val = v.trim().toUpperCase();
-      addCustomOption(fieldKey, val);
-      rebuildSelect(f, val);
-      toast("Added \"" + val + "\" to " + fieldKey);
-    } else {
-      sel.value = "";
-    }
-  }
-}
-function ensureOptionExists(f, value) {
-  if (!value) return;
-  if (!optionsFor(f).includes(value)) {
-    addCustomOption(f.key, value);
-    rebuildSelect(f, value);
-  }
-}
-
-// ---------------- Combo fields: dropdown options built from existing data ----------------
-const COMBO_FIELDS = ["Party Name","Country","Location","Relationship Manager","Claims Owner","Product","Brand"];
-
-function refreshCombos() {
-  COMBO_FIELDS.forEach(key => {
-    const dl = document.getElementById("dl_" + fid(key));
-    if (!dl) return;
-    const vals = [...new Set(records.map(r => (r[key] || "").trim()).filter(Boolean))].sort();
-    dl.innerHTML = vals.map(v => `<option value="${esc(v)}"></option>`).join("");
-  });
-}
-
-// ---------------- Helpers ----------------
-const todayStr = () => new Date().toISOString().slice(0,10);
-
-function isoWeek(dateStr) {
-  if (!dateStr) return "";
-  const d = new Date(dateStr); if (isNaN(d)) return "";
-  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const dayNum = t.getUTCDay() || 7;
-  t.setUTCDate(t.getUTCDate() + 4 - dayNum);
-  const ys = new Date(Date.UTC(t.getUTCFullYear(),0,1));
-  return Math.ceil((((t - ys)/86400000)+1)/7);
-}
-function agingDays(rec) {
-  if (!rec["Claim Date"]) return "";
-  const s = new Date(rec["Claim Date"]);
-  const e = rec["Closed Date"] ? new Date(rec["Closed Date"]) : new Date();
-  if (isNaN(s) || isNaN(e)) return "";
-  return Math.max(0, Math.round((e - s)/86400000));
-}
-function nextRefNo() {
-  const prefix = "CLM-" + new Date().getFullYear() + "-";
-  let max = 0;
-  records.forEach(r => {
-    if (r["Ref No."] && r["Ref No."].startsWith(prefix)) {
-      const n = parseInt(r["Ref No."].slice(prefix.length), 10);
-      if (!isNaN(n) && n > max) max = n;
-    }
-  });
-  return prefix + String(max + 1).padStart(4, "0");
-}
-function nextNumberFor(fieldKey, baseline) {
-  let max = baseline;
-  records.forEach(r => {
-    const m = String(r[fieldKey] || "").match(/\d+/);
-    if (m) { const n = parseInt(m[0], 10); if (!isNaN(n) && n > max) max = n; }
-  });
-  return String(max + 1);
-}
-function prefillTicket(force) {
-  if (editingRef) return;
-  const t = document.getElementById(fid("Ticket no."));
-  if (t && (force || !t.value.trim())) t.value = nextNumberFor("Ticket no.", 8898);
-}
-function toast(msg, isErr) {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.className = isErr ? "error" : "";
-  t.style.display = "block";
-  clearTimeout(t._h);
-  t._h = setTimeout(() => t.style.display = "none", 3000);
-}
-function fid(key) { return "f_" + key.replace(/[^a-zA-Z0-9]/g, "_"); }
-function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
-
-// ---------------- Build form ----------------
-function buildForm() {
-  const host = document.getElementById("formSections");
-  host.innerHTML = SECTIONS.map((sec, i) => {
-    const open = (i === 0 || i === 2);
-    const fields = sec.fields.map(f => {
-      const label = `<label>${esc(f.key)}${f.req ? ' <span class="req">*</span>' : ''}</label>`;
-      let ctrl;
-      if (f.type === "combo") {
-        ctrl = `<input id="${fid(f.key)}" type="text" list="dl_${fid(f.key)}" placeholder="Type to search or add new…" autocomplete="off"><datalist id="dl_${fid(f.key)}"></datalist>`;
-      } else if (f.type === "selectadd") {
-        ctrl = `<select id="${fid(f.key)}" onchange="handleSelectAdd('${f.key.replace(/'/g,"\\'")}')"><option value="">— Select —</option>${optionsFor(f).map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join("")}<option value="__add__">➕ Add new…</option></select>`;
-      } else if (f.type === "select") {
-        ctrl = `<select id="${fid(f.key)}"><option value="">— Select —</option>${f.options.map(o=>`<option>${o}</option>`).join("")}</select>`;
-      } else if (f.type === "textarea") {
-        ctrl = `<textarea id="${fid(f.key)}" rows="2"></textarea>`;
-      } else {
-        ctrl = `<input id="${fid(f.key)}" type="${f.type}" ${f.type==="number"?'step="any"':''}>`;
-      }
-      return `<div class="field ${f.type==="textarea"?"wide":""}">${label}${ctrl}</div>`;
-    }).join("");
-    return `<div class="section">
-      <button class="sec-head" onclick="toggleSec(${i})"><span>${sec.title}</span><span id="secArrow${i}">${open?"−":"+"}</span></button>
-      <div class="sec-body ${open?"":"hidden"}" id="secBody${i}">${fields}</div>
-    </div>`;
-  }).join("");
-}
-function toggleSec(i) {
-  const b = document.getElementById("secBody" + i);
-  const a = document.getElementById("secArrow" + i);
-  b.classList.toggle("hidden");
-  a.textContent = b.classList.contains("hidden") ? "+" : "−";
-}
-function openAllSections() {
-  SECTIONS.forEach((_, i) => {
-    document.getElementById("secBody"+i).classList.remove("hidden");
-    document.getElementById("secArrow"+i).textContent = "−";
-  });
-}
-
-// ---------------- CRUD ----------------
-function readForm() {
-  const o = {};
-  ALL_FIELDS.forEach(k => {
-    let v = document.getElementById(fid(k)).value;
-    if (v === "__add__") v = "";
-    o[k] = v.trim();
-  });
-  return o;
-}
-function clearForm() {
-  ALL_FIELDS.forEach(k => document.getElementById(fid(k)).value = "");
-  editingRef = null;
-  document.getElementById("editbar").style.display = "none";
-  document.getElementById("saveBtn").textContent = "Save Record";
-  prefillTicket(true);
-}
-function cancelEdit() { clearForm(); }
-
-function saveRecord() {
-  const f = readForm();
-  if (!f["Party Name"]) { toast("Party Name is required", true); return; }
-  const now = new Date().toLocaleString("en-IN");
-  let savedRec;
-  if (editingRef) {
-    const i = records.findIndex(r => r["Ref No."] === editingRef);
-    if (i >= 0) { records[i] = { ...records[i], ...f, "Modified Time": now, "Last Activity Time": now }; savedRec = records[i]; }
-    toast("Updated " + editingRef);
-  } else {
-    const ref = nextRefNo();
-    savedRec = { "Ref No.": ref, ...f, "Created Time": now, "Modified Time": now, "Last Activity Time": now };
-    records.push(savedRec);
-    toast("Saved as " + ref);
-  }
-  persist();
-  refreshCombos();
-  rebuildSelectAdds();
-  if (savedRec) syncPushRecord(savedRec);
-  clearForm();
-  renderTable();
-}
-function editRecord(ref) {
-  const r = records.find(x => x["Ref No."] === ref);
-  if (!r) return;
-  SECTIONS.flatMap(s => s.fields).filter(f => f.type === "selectadd").forEach(f => ensureOptionExists(f, (r[f.key] || "").trim()));
-  ALL_FIELDS.forEach(k => {
-    const el = document.getElementById(fid(k));
-    let v = r[k] || "";
-    if (DATE_FIELDS.includes(k)) v = displayDate(v); // date inputs need clean yyyy-mm-dd
-    if (v && el.tagName === "SELECT" && ![...el.options].some(o => o.value === v)) {
-      // Record has a value the dropdown doesn't know — add it so nothing shows blank
-      const opt = document.createElement("option");
-      opt.value = v; opt.textContent = v;
-      el.insertBefore(opt, el.querySelector('option[value="__add__"]'));
-    }
-    el.value = v;
-  });
-  editingRef = ref;
-  document.getElementById("editingRefLabel").textContent = ref;
-  document.getElementById("editbar").style.display = "flex";
-  document.getElementById("saveBtn").textContent = "Update Record";
-  openAllSections();
-  switchView("entry");
-  window.scrollTo(0, 0);
-}
-function deleteRecord(ref) {
-  if (!confirm("Delete " + ref + "? This will also remove it from the Google Sheet.")) return;
-  records = records.filter(r => r["Ref No."] !== ref);
-  persist();
-  syncDelete(ref);
-  renderTable();
-  toast("Deleted " + ref);
-}
-
-// ---------------- Views ----------------
-function switchView(v) {
-  document.getElementById("viewEntry").style.display = v === "entry" ? "block" : "none";
-  document.getElementById("viewRegister").style.display = v === "register" ? "block" : "none";
-  document.getElementById("tabEntry").classList.toggle("active", v === "entry");
-  document.getElementById("tabRegister").classList.toggle("active", v === "register");
-  if (v === "register") { populateFilters(); renderTable(); }
-  if (v === "entry") prefillTicket(false);
-}
-function containerCount(r) { return parseFloat(r["No. Of Containers"]) || 0; }
-
-function refreshStats() {
-  const isOpen = r => String(r["Status"] || "").trim().toLowerCase() === "open";
-  const openContainers = records.filter(isOpen).reduce((s, r) => s + containerCount(r), 0);
-  const totalContainers = records.reduce((s, r) => s + containerCount(r), 0);
-
-  document.getElementById("substat").textContent =
-    records.length + " record" + (records.length !== 1 ? "s" : "") +
-    " · Open claims: " + openContainers + " container" + (openContainers !== 1 ? "s" : "") +
-    " · Total: " + totalContainers +
-    (syncUrl ? " · 🟢 Synced to Google Sheet" : " · ⚪ Local only — click ⚙ Sync to connect");
-  document.getElementById("regCount").textContent = records.length;
-}
-
-function populateFilters() {
-  const fill = (id, key) => {
-    const sel = document.getElementById(id);
-    const current = sel.value;
-    const vals = [...new Set(records.map(r => (r[key] || "").trim()).filter(Boolean))].sort();
-    sel.innerHTML = `<option value="">All ${key.toLowerCase()}s</option>` + vals.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join("");
-    if (vals.includes(current)) sel.value = current;
-  };
-  fill("filterCountry", "Country");
-  fill("filterBrand", "Brand");
-  fill("filterNature", "Nature Of Claim");
-}
-
-function clearFilters() {
-  document.getElementById("searchbox").value = "";
-  document.getElementById("filterStatus").value = "";
-  document.getElementById("filterCountry").value = "";
-  document.getElementById("filterBrand").value = "";
-  document.getElementById("filterNature").value = "";
-  document.getElementById("filterFrom").value = "";
-  document.getElementById("filterTo").value = "";
-  renderTable();
-}
-
-function renderTable() {
-  const q = (document.getElementById("searchbox").value || "").toLowerCase();
-  const status = document.getElementById("filterStatus").value;
-  const country = document.getElementById("filterCountry").value;
-  const brand = document.getElementById("filterBrand").value;
-  const nature = document.getElementById("filterNature").value;
-  const from = document.getElementById("filterFrom").value;
-  const to = document.getElementById("filterTo").value;
-
-  const keys = ["Ref No.","Ticket no.","Party Name","Container no.","Product","Stage","Status"];
-  const list = records.filter(r => {
-    if (q && !keys.some(k => String(r[k]||"").toLowerCase().includes(q))) return false;
-    if (status && String(r["Status"] || "").trim().toLowerCase() !== status) return false;
-    if (country && (r["Country"] || "").trim() !== country) return false;
-    if (brand && (r["Brand"] || "").trim() !== brand) return false;
-    if (nature && (r["Nature Of Claim"] || "").trim() !== nature) return false;
-    const d = displayDate(r["Claim Date"]);
-    if (from && (!d || d < from)) return false;
-    if (to && (!d || d > to)) return false;
-    return true;
-  });
-
-  const hasFilter = q || status || country || brand || nature || from || to;
-  document.getElementById("filterCount").textContent = hasFilter
-    ? "Showing " + list.length + " of " + records.length + " records"
-    : "";
-
-  const area = document.getElementById("tableArea");
-  if (list.length === 0) {
-    area.innerHTML = `<div class="empty">${records.length === 0 ? "No records yet. Add your first claim from the New Entry tab or import an Excel file." : "No records match your filters."}</div>`;
-    return;
-  }
-  const rows = list.map(r => {
-    const st = (r["Status"] || "").trim();
-    const cls = st.toLowerCase() === "closed" ? "done" : st.toLowerCase() === "open" ? "open" : "none";
-    return `<tr>
-      <td class="refno">${esc(r["Ref No."])}</td>
-      <td style="white-space:nowrap">${esc(r["Ticket no."])}</td>
-      <td>${esc(r["Party Name"])}</td>
-      <td style="white-space:nowrap">${esc(r["Container no."])}</td>
-      <td style="white-space:nowrap">${esc(displayDate(r["Claim Date"]))}</td>
-      <td>${esc(r["Product"])}</td>
-      <td>${esc(r["Brand"])}</td>
-      <td>${esc(r["Country"])}</td>
-      <td><span class="badge ${cls}">${esc(st || "—")}</span></td>
-      <td style="text-align:center">${agingDays(r)}</td>
-      <td style="text-align:center">${isoWeek(r["Claim Date"])}</td>
-      <td style="white-space:nowrap">
-        <button class="rowbtn edit" onclick="editRecord('${esc(r["Ref No."])}')">Edit</button>
-        <button class="rowbtn del" onclick="deleteRecord('${esc(r["Ref No."])}')">Delete</button>
-      </td>
-    </tr>`;
-  }).join("");
-  area.innerHTML = `<div class="tablewrap"><table>
-    <thead><tr><th>Ref No.</th><th>Ticket No.</th><th>Party Name</th><th>Container No.</th><th>Claim Date</th><th>Product</th><th>Brand</th><th>Country</th><th>Status</th><th>Aging</th><th>Wk</th><th></th></tr></thead>
-    <tbody>${rows}</tbody></table></div>`;
-}
-
-function displayDate(d) {
-  if (!d) return "";
-  const s = String(d);
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  const dt = new Date(s);
-  if (!isNaN(dt)) {
-    return dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0");
-  }
-  return s;
-}
-
-// ---------------- Export ----------------
-function exportExcel() {
-  if (records.length === 0) { toast("No records to export", true); return; }
-  if (typeof XLSX === "undefined") { toast("Excel library not loaded — connect to the internet once and reload", true); return; }
-  const rows = records.map(r => {
-    const row = {};
-    EXPORT_COLUMNS.forEach(c => {
-      if (c === "Today") row[c] = todayStr();
-      else if (c === "Aging") row[c] = agingDays(r);
-      else if (c === "Week No") row[c] = isoWeek(r["Claim Date"]);
-      else row[c] = r[c] ?? "";
-    });
-    return row;
-  });
-  const ws = XLSX.utils.json_to_sheet(rows, { header: EXPORT_COLUMNS });
-  ws["!cols"] = EXPORT_COLUMNS.map(c => ({ wch: Math.max(12, Math.min(c.length + 4, 28)) }));
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Claims Register");
-  XLSX.writeFile(wb, "Claims_Register_" + todayStr() + ".xlsx");
-  toast("Exported " + records.length + " record" + (records.length > 1 ? "s" : ""));
-}
-
-// ---------------- Import ----------------
-function excelDateToISO(v) {
-  if (v === null || v === undefined || v === "") return "";
-  if (typeof v === "number") {
-    const d = XLSX.SSF ? XLSX.SSF.parse_date_code(v) : null;
-    if (d) return d.y + "-" + String(d.m).padStart(2,"0") + "-" + String(d.d).padStart(2,"0");
-  }
-  const s = String(v).trim();
-  if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
-  const m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if (m) return m[3] + "-" + m[2].padStart(2,"0") + "-" + m[1].padStart(2,"0");
-  const d2 = new Date(s);
-  if (!isNaN(d2)) return d2.toISOString().slice(0,10);
-  return s;
-}
-
-const DATE_FIELDS = ["Claim Date","ETA","Inspection Date","Closed Date"];
-
-function importExcel(ev) {
-  const file = ev.target.files[0];
-  if (!file) return;
-  if (typeof XLSX === "undefined") { toast("Excel library not loaded — connect to the internet once and reload", true); ev.target.value = ""; return; }
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    let wb;
-    try {
-      wb = XLSX.read(new Uint8Array(e.target.result), { type: "array", cellDates: false });
-    } catch (err) {
-      toast("Could not open this file — is it password-protected or corrupted?", true);
-      ev.target.value = ""; return;
-    }
-    try {
-      const ws = wb.Sheets[wb.SheetNames[0]];
-      if (!ws) { toast("The file has no sheets", true); ev.target.value = ""; return; }
-
-      const grid = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
-      if (grid.length === 0) { toast("The sheet is empty", true); ev.target.value = ""; return; }
-
-      const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9%]/g, "");
-      const targets = ["Ref No.", ...ALL_FIELDS, "Created Time", "Modified Time", "Last Activity Time"];
-
-      let headerRowIdx = -1;
-      for (let i = 0; i < Math.min(grid.length, 25); i++) {
-        if (grid[i].some(c => norm(c) === "partyname")) { headerRowIdx = i; break; }
-      }
-      if (headerRowIdx === -1) {
-        toast("Could not find a 'Party Name' column in the first sheet — check the file has that header", true);
-        ev.target.value = ""; return;
-      }
-
-      const headerRow = grid[headerRowIdx];
-      const colMap = {};
-      headerRow.forEach((h, idx) => {
-        const t = targets.find(k => norm(k) === norm(h));
-        if (t) colMap[idx] = t;
-      });
-
-      const existingRefs = new Set(records.map(r => r["Ref No."]));
-      const now = new Date().toLocaleString("en-IN");
-      let added = 0, updated = 0, skipped = 0;
-
-      for (let i = headerRowIdx + 1; i < grid.length; i++) {
-        const rowArr = grid[i];
-        if (!rowArr || rowArr.every(c => c === "" || c === null || c === undefined)) continue;
-        const rec = {};
-        Object.entries(colMap).forEach(([idx, k]) => {
-          let v = rowArr[idx];
-          if (DATE_FIELDS.includes(k)) v = excelDateToISO(v);
-          rec[k] = v === null || v === undefined ? "" : String(v).trim();
-        });
-        if (!rec["Party Name"]) { skipped++; continue; }
-
-        if (rec["Ref No."] && existingRefs.has(rec["Ref No."])) {
-          const j = records.findIndex(r => r["Ref No."] === rec["Ref No."]);
-          records[j] = { ...records[j], ...rec, "Modified Time": now, "Last Activity Time": now };
-          updated++;
-        } else {
-          const ref = rec["Ref No."] || nextRefNo();
-          existingRefs.add(ref);
-          records.push({
-            ...Object.fromEntries(ALL_FIELDS.map(k => [k, ""])),
-            ...rec,
-            "Ref No.": ref,
-            "Created Time": rec["Created Time"] || now,
-            "Modified Time": now,
-            "Last Activity Time": now
-          });
-          added++;
+    <script>
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.icon');
+            if (content.style.display === "none") {
+                content.style.display = "grid";
+                icon.innerHTML = "&minus;";
+            } else {
+                content.style.display = "none";
+                icon.innerHTML = "+";
+            }
         }
-      }
+    </script>
 
-      persist();
-      refreshCombos();
-      rebuildSelectAdds();
-      populateFilters();
-      renderTable();
-      switchView("register");
-      let msg = "Imported: " + added + " new";
-      if (updated) msg += ", " + updated + " updated";
-      if (skipped) msg += ", " + skipped + " skipped (no Party Name)";
-      toast(msg);
-      if (syncUrl && (added || updated)) syncBulk(records);
-    } catch (err) {
-      toast("Import failed while processing rows: " + (err && err.message ? err.message : err), true);
-    }
-    ev.target.value = "";
-  };
-  reader.onerror = () => { toast("Could not read the file from disk — close it in Excel and try again", true); ev.target.value = ""; };
-  reader.readAsArrayBuffer(file);
-}
-
-// ---------------- Backup / restore ----------------
-function backupJSON() {
-  const blob = new Blob([JSON.stringify(records, null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "claims_register_backup_" + todayStr() + ".json";
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-function restoreJSON(ev) {
-  const file = ev.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const data = JSON.parse(reader.result);
-      if (!Array.isArray(data)) throw new Error("bad format");
-      if (!confirm("Restore " + data.length + " records? This will replace the current data in this browser.")) return;
-      records = data;
-      persist();
-      refreshCombos();
-      renderTable();
-      toast("Restored " + data.length + " records");
-    } catch(e) { toast("Invalid backup file", true); }
-  };
-  reader.readAsText(file);
-  ev.target.value = "";
-}
-
-// ---------------- Init ----------------
-buildForm();
-refreshCombos();
-refreshStats();
-(async function initLoad() {
-  try {
-    let cached = await idbGet(LS_KEY);
-    if (Array.isArray(cached) && cached.length && records.length === 0) {
-      records = cached;
-      refreshCombos();
-      rebuildSelectAdds();
-      refreshStats();
-      prefillTicket(false);
-      if (document.getElementById("viewRegister").style.display !== "none") { populateFilters(); renderTable(); }
-    }
-  } catch (e) { /* cache unavailable — Sheet sync will load the data */ }
-  if (syncUrl) syncPullAll(false);
-})();
-</script>
 </body>
 </html>
