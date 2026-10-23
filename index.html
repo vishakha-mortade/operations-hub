@@ -6,13 +6,17 @@
     <title>IG International - Operations Portal</title>
     <style>
         :root {
-            --primary: #1e293b;
+            --primary: #0f172a;
+            --secondary: #475569;
             --accent: #2563eb;
+            --accent-hover: #1d4ed8;
             --bg: #f8fafc;
             --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-sub: #64748b;
             --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --radius: 12px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
         }
 
         * {
@@ -22,218 +26,381 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg);
-            color: var(--text-main);
-            padding: 40px 20px;
-            line-height: 1.5;
+            color: var(--primary);
+            padding-bottom: 60px;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        header {
-            margin-bottom: 32px;
+        /* Top Navigation Header */
+        nav {
+            background-color: var(--card-bg);
             border-bottom: 1px solid var(--border);
-            padding-bottom: 20px;
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        h1 {
-            font-size: 1.75rem;
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: #ffffff;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.825rem;
+            color: #166534;
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Hero Header */
+        .hero {
+            max-width: 1200px;
+            margin: 40px auto 20px auto;
+            padding: 0 24px;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
             color: var(--primary);
         }
 
-        p.subtitle {
-            color: var(--text-sub);
-            font-size: 0.95rem;
-            margin-top: 4px;
+        .hero p {
+            color: var(--secondary);
+            font-size: 1rem;
+            margin-top: 6px;
+        }
+
+        /* Section Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 36px 0 18px 0;
         }
 
         .section-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin: 28px 0 14px 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--secondary);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
         }
 
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background-color: var(--border);
+        }
+
+        /* Grid & Cards */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
         }
 
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 18px 20px;
+            border-radius: var(--radius);
+            padding: 22px;
             text-decoration: none;
             color: inherit;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: all 0.2s ease-in-out;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
 
         .card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
-            transform: translateY(-2px);
+            border-color: #93c5fd;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
         }
 
-        .card-header {
+        .card-top {
+            margin-bottom: 16px;
+        }
+
+        .card-meta {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
+
+        .platform-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            background-color: #f1f5f9;
+        }
+
+        /* Specific Badge Colors */
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+        .badge-html { background-color: #fef3c7; color: #92400e; }
+        .badge-looker { background-color: #e0f2fe; color: #075985; }
+        .badge-webapp { background-color: #f3e8ff; color: #6b21a8; }
+        .badge-notion { background-color: #f1f5f9; color: #334155; }
+        .badge-sheet { background-color: #dcfce7; color: #166534; }
 
         .card-title {
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 1.05rem;
+            font-weight: 700;
             color: var(--primary);
-        }
-
-        .badge {
-            font-size: 0.725rem;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 12px;
-            background-color: #f1f5f9;
-            color: #475569;
+            line-height: 1.3;
+            margin-bottom: 6px;
         }
 
         .card-desc {
             font-size: 0.875rem;
-            color: var(--text-sub);
-            margin-bottom: 12px;
+            color: var(--secondary);
+            line-height: 1.5;
         }
 
         .card-footer {
-            font-size: 0.775rem;
+            font-size: 0.85rem;
             color: var(--accent);
-            font-weight: 500;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            padding-top: 12px;
+            border-top: 1px solid #f1f5f9;
         }
 
-        .card-footer span {
-            transition: transform 0.2s;
+        .card-footer svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s ease;
         }
 
-        .card:hover .card-footer span {
-            transform: translateX(3px);
+        .card:hover .card-footer svg {
+            transform: translateX(4px);
         }
     </style>
 </head>
 <body>
 
+    <!-- NAV BAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="brand">
+                <div class="brand-logo">IG</div>
+                <span>Operations Portal</span>
+            </a>
+            <div class="nav-status">
+                <span class="status-dot"></span> System Live
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <div class="hero">
+        <h1>IG Operations & Claims Hub</h1>
+        <p>Central workspace for live logistics control rooms, claims registers, and reporting systems.</p>
+    </div>
+
     <div class="container">
-        <header>
-            <h1>IG Operations & Claims Hub</h1>
-            <p class="subtitle">Quick access portal for active reporting tools, spreadsheets, and control panels.</p>
-        </header>
 
         <!-- SECTION 1: QUALITY & CLAIMS CONTROL -->
-        <div class="section-title">Quality & Claims Control</div>
+        <div class="section-header">
+            <span class="section-title">Quality & Claims Control</span>
+            <div class="section-line"></div>
+        </div>
+        
         <div class="grid">
 
             <a href="file:///C:/Users/IGIPLCASHIER/Downloads/IG_Claims_QC_Dashboard%20rev%205.html" target="_blank" class="card">
-                <div>
-                    <div class="card-header">
-                        <span class="card-title">IG Claims & QC Control Room</span>
-                        <span class="badge">Local HTML</span>
+                <div class="card-top">
+                    <div class="card-meta">
+                        <div class="platform-icon">📊</div>
+                        <span class="badge badge-html">Local HTML</span>
                     </div>
-                    <div class="card-desc">Main control room monitoring open claims aging, container breakdowns, and QC releases[cite: 4].</div>
+                    <div class="card-title">IG Claims & QC Control Room</div>
+                    <div class="card-desc">Main control room monitoring open claims aging, container breakdowns, and QC releases.</div>
                 </div>
-                <div class="card-footer">Open Control Room <span>&rarr;</span></div>
+                <div class="card-footer">
+                    Open Control Room 
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </div>
             </a>
 
             <a href="https://datastudio.google.com/u/0/reporting/e77bff39-012e-47f4-8689-7d634060930d/page/p_sx9nrm9l5d" target="_blank" class="card">
-                <div>
-                    <div class="card-header">
-                        <span class="card-title">Open Claims Dashboard</span>
-                        <span class="badge">Looker Studio</span>
+                <div class="card-top">
+                    <div class="card-meta">
+                        <div class="platform-icon">📈</div>
+                        <span class="badge badge-looker">Looker Studio</span>
                     </div>
-                    <div class="card-desc">Yearly ticket count trends, claim status breakdown, and container volume overview[cite: 1].</div>
+                    <div class="card-title">Open Claims Dashboard</div>
+                    <div class="card-desc">Yearly ticket count trends, claim status breakdown, and container volume overview.</div>
                 </div>
-                <div class="card-footer">Launch Report <span>&rarr;</span></div>
+                <div class="card-footer">
+                    Launch Report 
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </div>
             </a>
 
             <a href="https://agri.qcone.com/reports/10013297" target="_blank" class="card">
-                <div>
-                    <div class="card-header">
-                        <span class="card-title">QC One Inspection Portal</span>
-                        <span class="badge">Web App</span>
+                <div class="card-top">
+                    <div class="card-meta">
+                        <div class="platform-icon">🍎</div>
+                        <span class="badge badge-webapp">Web App</span>
                     </div>
-                    <div class="card-desc">Individual container inspection reports, quality grades, defect alerts, and lab logs[cite: 6].</div>
+                    <div class="card-title">QC One Inspection Portal</div>
+                    <div class="card-desc">Individual container inspection reports, quality grades, defect alerts, and lab logs.</div>
                 </div>
-                <div class="card-footer">View QC Report <span>&rarr;</span></div>
+                <div class="card-footer">
+                    View QC Report 
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </div>
             </a>
 
         </div>
 
         <!-- SECTION 2: REGISTERS & TEAM SYNC -->
-        <div class="section-title">Data Registers & Team Sync</div>
+        <div class="section-header">
+            <span class="section-title">Data Registers & Team Sync</span>
+            <div class="section-line"></div>
+        </div>
+
         <div class="grid">
 
             <a href="https://app.notion.com/p/iginternational/Claim-s-deck-e722baf654d5437bbe2eeb0572273d5a#14034e88d8f38004a57bc74a66e373d0" target="_blank" class="card">
-                <div>
-                    <div class="card-header">
-                        <span class="card-title">Claim's deck (Notion Hub)</span>
-                        <span class="badge">Notion</span>
+                <div class="card-top">
+                    <div class="card-meta">
+                        <div class="platform-icon">📝</div>
+                        <span class="badge badge-notion">Notion Workspace</span>
                     </div>
+                    <div class="card-title">Claim's deck (Notion Hub)</div>
                     <div class="card-desc">Quality Claims WhatsApp team workspace tracking live database views, ticket counts, and team views.</div>
                 </div>
-                <div class="card-footer">Open Notion Deck <span>&rarr;</span></div>
+                <div class="card-footer">
+                    Open Notion Deck 
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </div>
             </a>
 
             <a href="file:///C:/Users/IGIPLCASHIER/Downloads/Claims_Register_TeamSync_V2-1%20(2).html" target="_blank" class="card">
-                <div>
-                    <div class="card-header">
-                        <span class="card-title">Claims Register (TeamSync App)</span>
-                        <span class="badge">Local Web App</span>
+                <div class="card-top">
+                    <div class="card-meta">
+                        <div class="platform-icon">⚡</div>
+                        <span class="badge badge-html">Local Web App</span>
                     </div>
-                    <div class="card-desc">Data entry form to create, sync, and update claims, party information, and defect entries[cite: 5].</div>
+                    <div class="card-title">Claims Register (TeamSync App)</div>
+                    <div class="card-desc">Data entry form to create, sync, and update claims, party information, and defect entries.</div>
                 </div>
-                <div class="card-footer">Open TeamSync <span>&rarr;</span></div>
+                <div class="card-footer">
+                    Open TeamSync 
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </div>
             </a>
 
             <a href="https://docs.google.com/spreadsheets/d/1AMQlJRpIBUEvm4V9ugZS5BWutHSrvJL-RIPSYCWNnYY/edit?gid=294814046#gid=294814046" target="_blank" class="card">
-                <div>
-                    <div class="card-header">
-                        <span class="card-title">Claim Register Sheet</span>
-                        <span class="badge">Google Sheets</span>
+                <div class="card-top">
+                    <div class="card-meta">
+                        <div class="platform-icon">📗</div>
+                        <span class="badge badge-sheet">Google Sheets</span>
                     </div>
-                    <div class="card-desc">Live Master Excel register tracking cost sheet stages, relationship managers, and ticket numbers[cite: 3].</div>
+                    <div class="card-title">Claim Register Sheet</div>
+                    <div class="card-desc">Live Master Excel register tracking cost sheet stages, relationship managers, and ticket numbers.</div>
                 </div>
-                <div class="card-footer">Open Sheet <span>&rarr;</span></div>
+                <div class="card-footer">
+                    Open Sheet 
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </div>
             </a>
 
         </div>
 
         <!-- SECTION 3: IMPORT & LOGISTICS -->
-        <div class="section-title">Import & Logistics</div>
+        <div class="section-header">
+            <span class="section-title">Import & Logistics</span>
+            <div class="section-line"></div>
+        </div>
+
         <div class="grid">
 
             <a href="https://datastudio.google.com/reporting/b9a70b57-68cc-4481-8391-f81d664ba095/page/d1KXC" target="_blank" class="card">
-                <div>
-                    <div class="card-header">
-                        <span class="card-title">Import Management Dashboard</span>
-                        <span class="badge">Looker Studio</span>
+                <div class="card-top">
+                    <div class="card-meta">
+                        <div class="platform-icon">📦</div>
+                        <span class="badge badge-looker">Looker Studio</span>
                     </div>
-                    <div class="card-desc">Overview of total PO statuses, product varieties, shipping lines, and port arrivals[cite: 2].</div>
+                    <div class="card-title">Import Management Dashboard</div>
+                    <div class="card-desc">Overview of total PO statuses, product varieties, shipping lines, and port arrivals.</div>
                 </div>
-                <div class="card-footer">Launch Dashboard <span>&rarr;</span></div>
+                <div class="card-footer">
+                    Launch Dashboard 
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </div>
             </a>
 
         </div>
+
     </div>
 
 </body>
