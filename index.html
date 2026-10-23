@@ -17,280 +17,55 @@
             --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.08);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--primary); padding-bottom: 60px; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--primary);
-            padding-bottom: 60px;
-            -webkit-font-smoothing: antialiased;
-        }
+        nav { background-color: var(--card-bg); border-bottom: 1px solid var(--border); padding: 12px 24px; position: sticky; top: 0; z-index: 100; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--primary); }
+        .brand-logo-img { height: 40px; width: auto; object-fit: contain; }
+        .brand-text { display: flex; flex-direction: column; }
+        .brand-title { font-weight: 800; font-size: 1.1rem; color: var(--primary); line-height: 1.2; }
+        .brand-sub { font-size: 0.75rem; color: var(--secondary); font-weight: 500; }
+        
+        .nav-status { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #166534; background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+        .status-dot { width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; }
 
-        /* Top Navigation */
-        nav {
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+        .hero { max-width: 1200px; margin: 36px auto 20px auto; padding: 0 24px; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px; }
+        .hero-text h1 { font-size: 1.85rem; font-weight: 800; }
+        .hero-text p { color: var(--secondary); font-size: 0.95rem; margin-top: 4px; }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        .search-box { position: relative; min-width: 280px; }
+        .search-box input { width: 100%; padding: 10px 16px 10px 38px; border-radius: 8px; border: 1px solid var(--border); outline: none; font-size: 0.9rem; background-color: var(--card-bg); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--secondary); }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
-            color: var(--primary);
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .section-header { display: flex; align-items: center; gap: 12px; margin: 32px 0 16px 0; }
+        .section-title { font-size: 0.8rem; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.08em; }
+        .section-line { flex: 1; height: 1px; background-color: var(--border); }
 
-        .brand-logo-img {
-            height: 42px;
-            width: auto;
-            object-fit: contain;
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; }
+        .card { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-sm); transition: all 0.25s ease; }
+        .card:hover { border-color: #93c5fd; transform: translateY(-3px); box-shadow: var(--shadow-md); }
 
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .brand-title {
-            font-weight: 800;
-            font-size: 1.1rem;
-            letter-spacing: -0.01em;
-            color: var(--primary);
-            line-height: 1.2;
-        }
-
-        .brand-sub {
-            font-size: 0.75rem;
-            color: var(--secondary);
-            font-weight: 500;
-        }
-
-        .nav-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            color: #166534;
-            background-color: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #22c55e;
-            border-radius: 50%;
-        }
-
-        /* Hero & Search Header */
-        .hero {
-            max-width: 1200px;
-            margin: 36px auto 20px auto;
-            padding: 0 24px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .hero-text h1 {
-            font-size: 1.85rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-text p {
-            color: var(--secondary);
-            font-size: 0.95rem;
-            margin-top: 4px;
-        }
-
-        .search-box {
-            position: relative;
-            min-width: 280px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 16px 10px 38px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            outline: none;
-            font-size: 0.9rem;
-            background-color: var(--card-bg);
-            transition: all 0.2s;
-        }
-
-        .search-box input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Layout Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 32px 0 16px 0;
-        }
-
-        .section-title {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .section-line {
-            flex: 1;
-            height: 1px;
-            background-color: var(--border);
-        }
-
-        /* Grid Cards */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 18px;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .card:hover {
-            border-color: #93c5fd;
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .card-top {
-            margin-bottom: 14px;
-        }
-
-        .card-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .platform-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.05rem;
-            background-color: #f1f5f9;
-        }
-
-        .badge {
-            font-size: 0.725rem;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 12px;
-        }
+        .card-top { margin-bottom: 14px; }
+        .card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .platform-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background-color: #f1f5f9; }
+        
+        .badge { font-size: 0.725rem; font-weight: 600; padding: 3px 10px; border-radius: 12px; }
         .badge-html { background-color: #fef3c7; color: #92400e; }
         .badge-looker { background-color: #e0f2fe; color: #075985; }
         .badge-webapp { background-color: #f3e8ff; color: #6b21a8; }
         .badge-notion { background-color: #f1f5f9; color: #334155; }
         .badge-sheet { background-color: #dcfce7; color: #166534; }
 
-        .card-title {
-            font-size: 1.025rem;
-            font-weight: 700;
-            color: var(--primary);
-            line-height: 1.35;
-            margin-bottom: 6px;
-        }
-
-        .card-desc {
-            font-size: 0.85rem;
-            color: var(--secondary);
-            line-height: 1.45;
-        }
-
-        .card-footer {
-            font-size: 0.825rem;
-            color: var(--accent);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 12px;
-            border-top: 1px solid #f1f5f9;
-        }
-
-        .card-footer-link {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .card-footer svg {
-            width: 14px;
-            height: 14px;
-            transition: transform 0.2s;
-        }
-
-        .card:hover .card-footer svg {
-            transform: translateX(4px);
-        }
-
-        .refresh-tag {
-            font-size: 0.725rem;
-            color: #94a3b8;
-            font-weight: 500;
-        }
+        .card-title { font-size: 1.025rem; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+        .card-desc { font-size: 0.85rem; color: var(--secondary); line-height: 1.45; }
+        
+        .card-footer { font-size: 0.825rem; color: var(--accent); font-weight: 600; display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid #f1f5f9; }
+        .card-footer-link { display: flex; align-items: center; gap: 4px; }
+        .card-footer svg { width: 14px; height: 14px; }
+        .refresh-tag { font-size: 0.725rem; color: #94a3b8; }
     </style>
 </head>
 <body>
@@ -298,7 +73,7 @@
     <nav>
         <div class="nav-container">
             <a href="#" class="brand">
-                <img src="https://www.iginternational.net/images/logo.png" alt="IG International Logo" class="brand-logo-img">
+                <img src="logo.png" alt="IG Logo" class="brand-logo-img">
                 <div class="brand-text">
                     <span class="brand-title">IG International</span>
                     <span class="brand-sub">Operations & Logistics Portal</span>
@@ -323,15 +98,13 @@
 
     <div class="container">
 
-        <!-- SECTION 1: QUALITY & CLAIMS CONTROL -->
         <div class="section-header">
             <span class="section-title">Quality & Claims Control</span>
             <div class="section-line"></div>
         </div>
         
         <div class="grid">
-
-            <a href="IG_Claims_QC_Dashboard rev 5.html" target="_blank" class="card">
+            <a href="claims-qc.html" target="_blank" class="card">
                 <div class="card-top">
                     <div class="card-meta">
                         <div class="platform-icon">📊</div>
@@ -341,10 +114,7 @@
                     <div class="card-desc">Main control room monitoring open claims aging, container breakdowns, and QC releases.</div>
                 </div>
                 <div class="card-footer">
-                    <span class="card-footer-link">
-                        Open Control Room 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
+                    <span class="card-footer-link">Open Control Room &rarr;</span>
                     <span class="refresh-tag">Real-time</span>
                 </div>
             </a>
@@ -359,10 +129,7 @@
                     <div class="card-desc">Yearly ticket count trends, claim status breakdown, and container volume overview.</div>
                 </div>
                 <div class="card-footer">
-                    <span class="card-footer-link">
-                        Launch Report 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
+                    <span class="card-footer-link">Launch Report &rarr;</span>
                     <span class="refresh-tag">Daily Sync</span>
                 </div>
             </a>
@@ -377,24 +144,18 @@
                     <div class="card-desc">Individual container inspection reports, quality grades, defect alerts, and lab logs.</div>
                 </div>
                 <div class="card-footer">
-                    <span class="card-footer-link">
-                        View QC Report 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
+                    <span class="card-footer-link">View QC Report &rarr;</span>
                     <span class="refresh-tag">Live Feed</span>
                 </div>
             </a>
-
         </div>
 
-        <!-- SECTION 2: REGISTERS & TEAM SYNC -->
         <div class="section-header">
             <span class="section-title">Data Registers & Team Sync</span>
             <div class="section-line"></div>
         </div>
 
         <div class="grid">
-
             <a href="https://app.notion.com/p/iginternational/Claim-s-deck-e722baf654d5437bbe2eeb0572273d5a#14034e88d8f38004a57bc74a66e373d0" target="_blank" class="card">
                 <div class="card-top">
                     <div class="card-meta">
@@ -405,15 +166,12 @@
                     <div class="card-desc">Quality Claims WhatsApp team workspace tracking live database views, ticket counts, and team views.</div>
                 </div>
                 <div class="card-footer">
-                    <span class="card-footer-link">
-                        Open Notion Deck 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
+                    <span class="card-footer-link">Open Notion Deck &rarr;</span>
                     <span class="refresh-tag">Team Active</span>
                 </div>
             </a>
 
-            <a href="Claims_Register_TeamSync_V2-1 (2).html" target="_blank" class="card">
+            <a href="teamsync.html" target="_blank" class="card">
                 <div class="card-top">
                     <div class="card-meta">
                         <div class="platform-icon">⚡</div>
@@ -423,10 +181,7 @@
                     <div class="card-desc">Data entry form to create, sync, and update claims, party information, and defect entries.</div>
                 </div>
                 <div class="card-footer">
-                    <span class="card-footer-link">
-                        Open TeamSync 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
+                    <span class="card-footer-link">Open TeamSync &rarr;</span>
                     <span class="refresh-tag">Form Portal</span>
                 </div>
             </a>
@@ -441,24 +196,18 @@
                     <div class="card-desc">Live Master Excel register tracking cost sheet stages, relationship managers, and ticket numbers.</div>
                 </div>
                 <div class="card-footer">
-                    <span class="card-footer-link">
-                        Open Sheet 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
+                    <span class="card-footer-link">Open Sheet &rarr;</span>
                     <span class="refresh-tag">Live Edit</span>
                 </div>
             </a>
-
         </div>
 
-        <!-- SECTION 3: IMPORT & LOGISTICS -->
         <div class="section-header">
             <span class="section-title">Import & Logistics</span>
             <div class="section-line"></div>
         </div>
 
         <div class="grid">
-
             <a href="https://datastudio.google.com/reporting/b9a70b57-68cc-4481-8391-f81d664ba095/page/d1KXC" target="_blank" class="card">
                 <div class="card-top">
                     <div class="card-meta">
@@ -469,34 +218,23 @@
                     <div class="card-desc">Overview of total PO statuses, product varieties, shipping lines, and port arrivals.</div>
                 </div>
                 <div class="card-footer">
-                    <span class="card-footer-link">
-                        Launch Dashboard 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
+                    <span class="card-footer-link">Launch Dashboard &rarr;</span>
                     <span class="refresh-tag">Daily Sync</span>
                 </div>
             </a>
-
         </div>
 
     </div>
 
-    <!-- Quick Search Script -->
     <script>
         function filterCards() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('card');
-
             for (let i = 0; i < cards.length; i++) {
                 let text = cards[i].innerText.toLowerCase();
-                if (text.includes(input)) {
-                    cards[i].style.display = "flex";
-                } else {
-                    cards[i].style.display = "none";
-                }
+                cards[i].style.display = text.includes(input) ? "flex" : "none";
             }
         }
     </script>
-
 </body>
 </html>
