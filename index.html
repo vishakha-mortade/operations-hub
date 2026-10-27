@@ -56,15 +56,6 @@
         /* Main Container */
         .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
 
-        /* Featured Command Card */
-        .featured-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border-radius: var(--radius); padding: 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; gap: 20px; text-decoration: none; box-shadow: var(--shadow-md); transition: transform 0.25s ease; border: 1px solid #334155; }
-        .featured-card:hover { transform: translateY(-2px); }
-        .featured-badge { background: rgba(37, 99, 235, 0.25); color: #93c5fd; border: 1px solid rgba(147, 197, 253, 0.3); font-size: 0.725rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; display: inline-block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
-        .featured-title { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin-bottom: 6px; color: #ffffff; }
-        .featured-desc { font-size: 0.875rem; color: #94a3b8; max-width: 600px; line-height: 1.45; }
-        .featured-btn { background: var(--accent); color: #ffffff; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: background 0.2s; }
-        .featured-card:hover .featured-btn { background: #1d4ed8; }
-
         /* Section Title Header */
         .section-header { display: flex; align-items: center; gap: 10px; margin: 24px 0 14px 0; }
         .section-title { font-size: 0.75rem; font-weight: 800; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.08em; }
@@ -145,19 +136,6 @@
 
     <div class="container">
 
-        <!-- Featured Primary Control Room -->
-        <a href="IG_Claims_QC_Dashboard.html" target="_blank" class="featured-card category-sec qc">
-            <div>
-                <span class="featured-badge">Primary Control Hub</span>
-                <div class="featured-title">IG Claims & QC Control Room</div>
-                <div class="featured-desc">Centralized command view monitoring open claims aging, container breakdowns, defect ratios, and QC releases in real-time.</div>
-            </div>
-            <div class="featured-btn">
-                Launch Hub
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </div>
-        </a>
-
         <!-- SECTION 1: QUALITY & CLAIMS CONTROL -->
         <div class="section-group category-sec qc">
             <div class="section-header">
@@ -166,6 +144,24 @@
             </div>
             
             <div class="grid">
+                <a href="IG_Claims_QC_Dashboard.html" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">📊</div>
+                            <span class="badge badge-html">Web Control Room</span>
+                        </div>
+                        <div class="card-title">IG Claims & QC Control Room</div>
+                        <div class="card-desc">Main control room monitoring open claims aging, container breakdowns, and QC releases.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            Open Control Room 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Real-time</span>
+                    </div>
+                </a>
+
                 <a href="https://app.hectre.com/load-assessments?ids=e2b52f42-da9a-4a6e-bd34-9e2141162959&page=1" target="_blank" class="card">
                     <div class="card-top">
                         <div class="card-meta">
@@ -355,13 +351,12 @@
             for (let t of tabs) t.classList.remove('active');
             btn.classList.add('active');
 
-            let sections = document.getElementsByClassName('category-sec');
-            for (let sec of sections) {
-                if (cat === 'all' || sec.classList.contains(cat)) {
-                    sec.style.display = 'block';
-                    if (sec.tagName === 'A') sec.style.display = 'flex';
+            let groups = document.getElementsByClassName('category-sec');
+            for (let g of groups) {
+                if (cat === 'all' || g.classList.contains(cat)) {
+                    g.style.display = 'block';
                 } else {
-                    sec.style.display = 'none';
+                    g.style.display = 'none';
                 }
             }
         }
