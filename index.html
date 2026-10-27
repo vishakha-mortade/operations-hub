@@ -262,4 +262,105 @@
                     </div>
                 </a>
 
-                <a href="
+                <a href="https://docs.google.com/spreadsheets/d/1AMQlJRpIBUEvm4V9ugZS5BWutHSrvJL-RIPSYCWNnYY/edit?gid=294814046#gid=294814046" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">📗</div>
+                            <span class="badge badge-sheet">Google Sheets</span>
+                        </div>
+                        <div class="card-title">Claim Register Sheet</div>
+                        <div class="card-desc">Live Master Excel register tracking cost sheet stages and ticket numbers.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            Open Sheet 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Live Edit</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- SECTION 3: IMPORT & LOGISTICS -->
+        <div class="section-group category-sec logistics">
+            <div class="section-header">
+                <span class="section-title">Import & Logistics</span>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="grid">
+                <a href="https://datastudio.google.com/reporting/b9a70b57-68cc-4481-8391-f81d664ba095/page/d1KXC" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">📦</div>
+                            <span class="badge badge-looker">Looker Studio</span>
+                        </div>
+                        <div class="card-title">Import Management Dashboard</div>
+                        <div class="card-desc">Overview of PO statuses, product varieties, shipping lines, and port arrivals.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            Launch Dashboard 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Daily Sync</span>
+                    </div>
+                </a>
+
+                <a href="cold-chain.html" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">🌡️</div>
+                            <span class="badge badge-html">Interactive Dashboard</span>
+                        </div>
+                        <div class="card-title">Cold Chain Temperature Review</div>
+                        <div class="card-desc">Mumbai & Bangalore Distribution Centres weekly temperature compliance and candle charts.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            Open Dashboard 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Weekly Review</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function filterCards() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('card');
+
+            for (let i = 0; i < cards.length; i++) {
+                let text = cards[i].innerText.toLowerCase();
+                if (text.includes(input)) {
+                    cards[i].style.display = "flex";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
+
+        function filterCategory(cat, btn) {
+            let tabs = document.getElementsByClassName('tab-btn');
+            for (let t of tabs) t.classList.remove('active');
+            btn.classList.add('active');
+
+            let groups = document.getElementsByClassName('category-sec');
+            for (let g of groups) {
+                if (cat === 'all' || g.classList.contains(cat)) {
+                    g.style.display = 'block';
+                } else {
+                    g.style.display = 'none';
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
