@@ -14,52 +14,72 @@
             --border: #e2e8f0;
             --radius: 12px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-            --shadow-md: 0 12px 28px -6px rgba(37, 99, 235, 0.08);
+            --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--primary); padding-bottom: 60px; -webkit-font-smoothing: antialiased; }
 
         /* Top Navigation */
-        nav { background-color: var(--card-bg); border-bottom: 1px solid var(--border); padding: 14px 28px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-        .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--primary); }
-        .brand-logo-icon { width: 38px; height: 38px; background: var(--primary); color: #fff; font-weight: 800; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        nav { background-color: var(--card-bg); border-bottom: 1px solid var(--border); padding: 12px 28px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+        .nav-container { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--primary); }
+        .brand-logo-img { height: 38px; width: auto; object-fit: contain; }
+        .brand-logo-fallback { width: 38px; height: 38px; background: var(--primary); color: #fff; font-weight: 800; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; }
         .brand-text { display: flex; flex-direction: column; }
-        .brand-title { font-weight: 800; font-size: 1.15rem; color: var(--primary); line-height: 1.2; letter-spacing: -0.01em; }
-        .brand-sub { font-size: 0.8rem; color: var(--secondary); font-weight: 600; }
+        .brand-title { font-weight: 800; font-size: 1.1rem; color: var(--primary); line-height: 1.2; }
+        .brand-sub { font-size: 0.78rem; color: var(--secondary); font-weight: 600; }
         
-        .nav-status { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #166534; background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 6px 14px; border-radius: 20px; font-weight: 600; }
-        .status-dot { width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; box-shadow: 0 0 8px rgba(34, 197, 94, 0.5); }
+        .nav-status { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: #166534; background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 5px 12px; border-radius: 20px; font-weight: 600; }
+        .status-dot { width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; box-shadow: 0 0 6px rgba(34, 197, 94, 0.5); }
 
-        /* Hero & Search Header */
-        .hero { max-width: 1200px; margin: 40px auto 24px auto; padding: 0 24px; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px; }
-        .hero-text h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; color: var(--primary); }
-        .hero-text p { color: var(--secondary); font-size: 0.95rem; margin-top: 6px; }
+        /* Hero Header */
+        .hero { max-width: 1240px; margin: 28px auto 16px auto; padding: 0 24px; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
+        .hero-text h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; color: var(--primary); }
+        .hero-text p { color: var(--secondary); font-size: 0.9rem; margin-top: 4px; }
 
-        .search-box { position: relative; min-width: 300px; }
-        .search-box input { width: 100%; padding: 11px 16px 11px 40px; border-radius: 10px; border: 1px solid var(--border); outline: none; font-size: 0.9rem; background-color: var(--card-bg); transition: all 0.25s ease; box-shadow: var(--shadow-sm); }
-        .search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
-        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--secondary); font-size: 0.95rem; }
+        .search-box { position: relative; min-width: 280px; }
+        .search-box input { width: 100%; padding: 9px 14px 9px 36px; border-radius: 8px; border: 1px solid var(--border); outline: none; font-size: 0.85rem; background-color: var(--card-bg); transition: all 0.2s ease; box-shadow: var(--shadow-sm); }
+        .search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--secondary); font-size: 0.85rem; }
 
-        /* Layout Container */
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-        .section-header { display: flex; align-items: center; gap: 14px; margin: 36px 0 18px 0; }
-        .section-title { font-size: 0.8rem; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.1em; background: #f1f5f9; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); }
+        /* Stats Strip */
+        .stats-bar { max-width: 1240px; margin: 0 auto 20px auto; padding: 0 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+        .stat-pill { background: var(--card-bg); border: 1px solid var(--border); padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; color: var(--secondary); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .stat-pill b { color: var(--primary); }
+
+        /* Category Filter Tabs */
+        .tabs-container { max-width: 1240px; margin: 0 auto 20px auto; padding: 0 24px; display: flex; gap: 8px; overflow-x: auto; }
+        .tab-btn { border: 1px solid var(--border); background: var(--card-bg); color: var(--secondary); padding: 7px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .tab-btn:hover, .tab-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+
+        /* Main Container */
+        .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+
+        /* Featured Command Card */
+        .featured-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border-radius: var(--radius); padding: 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; gap: 20px; text-decoration: none; box-shadow: var(--shadow-md); transition: transform 0.25s ease; border: 1px solid #334155; }
+        .featured-card:hover { transform: translateY(-2px); }
+        .featured-badge { background: rgba(37, 99, 235, 0.25); color: #93c5fd; border: 1px solid rgba(147, 197, 253, 0.3); font-size: 0.725rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; display: inline-block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .featured-title { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin-bottom: 6px; color: #ffffff; }
+        .featured-desc { font-size: 0.875rem; color: #94a3b8; max-width: 600px; line-height: 1.45; }
+        .featured-btn { background: var(--accent); color: #ffffff; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; white-space: nowrap; transition: background 0.2s; }
+        .featured-card:hover .featured-btn { background: #1d4ed8; }
+
+        /* Section Title Header */
+        .section-header { display: flex; align-items: center; gap: 10px; margin: 24px 0 14px 0; }
+        .section-title { font-size: 0.75rem; font-weight: 800; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.08em; }
         .section-line { flex: 1; height: 1px; background-color: var(--border); }
 
-        /* Grid Cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
-        .card { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-sm); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent); opacity: 0; transition: opacity 0.3s ease; }
-        .card:hover { border-color: #cbd5e1; transform: translateY(-4px); box-shadow: var(--shadow-md); }
-        .card:hover::before { opacity: 1; }
+        /* Compact Grid Cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-bottom: 28px; }
+        .card { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-sm); transition: all 0.2s ease; }
+        .card:hover { border-color: #93c5fd; transform: translateY(-2px); box-shadow: var(--shadow-md); }
 
-        .card-top { margin-bottom: 14px; }
-        .card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-        .platform-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; background-color: #f8fafc; border: 1px solid var(--border); }
+        .card-top { margin-bottom: 10px; }
+        .card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .platform-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1rem; background-color: #f1f5f9; }
         
-        .badge { font-size: 0.725rem; font-weight: 600; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.02em; }
+        .badge { font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
         .badge-html { background-color: #fef3c7; color: #92400e; }
         .badge-looker { background-color: #e0f2fe; color: #075985; }
         .badge-webapp { background-color: #f3e8ff; color: #6b21a8; }
@@ -67,22 +87,24 @@
         .badge-sheet { background-color: #dcfce7; color: #166534; }
         .badge-hectre { background-color: #ffedd5; color: #c2410c; }
 
-        .card-title { font-size: 1.05rem; font-weight: 700; color: var(--primary); line-height: 1.35; margin-bottom: 8px; }
-        .card-desc { font-size: 0.85rem; color: var(--secondary); line-height: 1.5; }
+        .card-title { font-size: 0.95rem; font-weight: 700; color: var(--primary); line-height: 1.3; margin-bottom: 4px; }
+        .card-desc { font-size: 0.8rem; color: var(--secondary); line-height: 1.4; }
         
-        .card-footer { font-size: 0.825rem; color: var(--accent); font-weight: 600; display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid #f1f5f9; margin-top: 12px; }
-        .card-footer-link { display: flex; align-items: center; gap: 6px; }
-        .card-footer svg { width: 14px; height: 14px; transition: transform 0.25s ease; }
-        .card:hover .card-footer svg { transform: translateX(5px); }
-        .refresh-tag { font-size: 0.725rem; color: #94a3b8; font-weight: 500; background: #f8fafc; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border); }
+        .card-footer { font-size: 0.78rem; color: var(--accent); font-weight: 600; display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #f1f5f9; margin-top: 10px; }
+        .card-footer-link { display: flex; align-items: center; gap: 4px; }
+        .card-footer svg { width: 12px; height: 12px; transition: transform 0.2s; }
+        .card:hover .card-footer svg { transform: translateX(3px); }
+        .refresh-tag { font-size: 0.7rem; color: #94a3b8; font-weight: 500; }
     </style>
 </head>
 <body>
 
+    <!-- Header / Brand -->
     <nav>
         <div class="nav-container">
             <a href="#" class="brand">
-                <div class="brand-logo-icon">IG</div>
+                <img src="logo.png" alt="IG Logo" class="brand-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="brand-logo-fallback" style="display: none;">IG</div>
                 <div class="brand-text">
                     <span class="brand-title">IG International</span>
                     <span class="brand-sub">Quality Department & Claim Portal</span>
@@ -94,214 +116,225 @@
         </div>
     </nav>
 
+    <!-- Executive Title & Search -->
     <div class="hero">
         <div class="hero-text">
             <h1>IG Operations & Claims Hub</h1>
-            <p>Central executive workspace for live logistics control rooms, inspections, and reporting tools.</p>
+            <p>Central executive portal for quality control rooms, claims tracking, and cold chain reporting.</p>
         </div>
         <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" onkeyup="filterCards()" placeholder="Search tools, reports or controls...">
+            <input type="text" id="searchInput" onkeyup="filterCards()" placeholder="Search tools or reports...">
         </div>
+    </div>
+
+    <!-- Quick Metrics Strip -->
+    <div class="stats-bar">
+        <div class="stat-pill"><b>8</b> Operational Tools</div>
+        <div class="stat-pill"><b>4</b> Platform Integrations</div>
+        <div class="stat-pill">⚡ <b>Real-time</b> Live Status</div>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="filterCategory('all', this)">All Workspace Tools</button>
+        <button class="tab-btn" onclick="filterCategory('qc', this)">Quality & Claims</button>
+        <button class="tab-btn" onclick="filterCategory('registers', this)">Registers & Team Sync</button>
+        <button class="tab-btn" onclick="filterCategory('logistics', this)">Import & Cold Chain</button>
     </div>
 
     <div class="container">
 
+        <!-- Featured Primary Control Room -->
+        <a href="IG_Claims_QC_Dashboard.html" target="_blank" class="featured-card category-sec qc">
+            <div>
+                <span class="featured-badge">Primary Control Hub</span>
+                <div class="featured-title">IG Claims & QC Control Room</div>
+                <div class="featured-desc">Centralized command view monitoring open claims aging, container breakdowns, defect ratios, and QC releases in real-time.</div>
+            </div>
+            <div class="featured-btn">
+                Launch Hub
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </div>
+        </a>
+
         <!-- SECTION 1: QUALITY & CLAIMS CONTROL -->
-        <div class="section-header">
-            <span class="section-title">Quality & Claims Control</span>
-            <div class="section-line"></div>
-        </div>
-        
-        <div class="grid">
-
-            <a href="IG_Claims_QC_Dashboard.html" target="_blank" class="card">
-                <div class="card-top">
-                    <div class="card-meta">
-                        <div class="platform-icon">📊</div>
-                        <span class="badge badge-html">Web Control Room</span>
+        <div class="section-group category-sec qc">
+            <div class="section-header">
+                <span class="section-title">Quality & Claims Control</span>
+                <div class="section-line"></div>
+            </div>
+            
+            <div class="grid">
+                <a href="https://app.hectre.com/load-assessments?ids=e2b52f42-da9a-4a6e-bd34-9e2141162959&page=1" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">🍏</div>
+                            <span class="badge badge-hectre">Hectre Platform</span>
+                        </div>
+                        <div class="card-title">Hectre Load Assessments</div>
+                        <div class="card-desc">Orchard load assessments, quality grading metrics, and inspection visuals.</div>
                     </div>
-                    <div class="card-title">IG Claims & QC Control Room</div>
-                    <div class="card-desc">Main control room monitoring open claims aging, container breakdowns, and QC releases.</div>
-                </div>
-                <div class="card-footer">
-                    <span class="card-footer-link">
-                        Open Control Room 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span class="refresh-tag">Real-time</span>
-                </div>
-            </a>
-
-            <a href="https://app.hectre.com/load-assessments?ids=e2b52f42-da9a-4a6e-bd34-9e2141162959&page=1" target="_blank" class="card">
-                <div class="card-top">
-                    <div class="card-meta">
-                        <div class="platform-icon">🍏</div>
-                        <span class="badge badge-hectre">Hectre Platform</span>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            Open Assessment 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Live Feed</span>
                     </div>
-                    <div class="card-title">Hectre Load Assessments</div>
-                    <div class="card-desc">Detailed orchard load assessments, quality grading metrics, and inspection visual data.</div>
-                </div>
-                <div class="card-footer">
-                    <span class="card-footer-link">
-                        Open Assessment 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span class="refresh-tag">Live Feed</span>
-                </div>
-            </a>
+                </a>
 
-            <a href="https://datastudio.google.com/u/0/reporting/e77bff39-012e-47f4-8689-7d634060930d/page/p_sx9nrm9l5d" target="_blank" class="card">
-                <div class="card-top">
-                    <div class="card-meta">
-                        <div class="platform-icon">📈</div>
-                        <span class="badge badge-looker">Looker Studio</span>
+                <a href="https://datastudio.google.com/u/0/reporting/e77bff39-012e-47f4-8689-7d634060930d/page/p_sx9nrm9l5d" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">📈</div>
+                            <span class="badge badge-looker">Looker Studio</span>
+                        </div>
+                        <div class="card-title">Open Claims Dashboard</div>
+                        <div class="card-desc">Yearly ticket count trends, status breakdown, and volume overview.</div>
                     </div>
-                    <div class="card-title">Open Claims Dashboard</div>
-                    <div class="card-desc">Yearly ticket count trends, claim status breakdown, and container volume overview.</div>
-                </div>
-                <div class="card-footer">
-                    <span class="card-footer-link">
-                        Launch Report 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span class="refresh-tag">Daily Sync</span>
-                </div>
-            </a>
-
-            <a href="https://agri.qcone.com/reports/10013297" target="_blank" class="card">
-                <div class="card-top">
-                    <div class="card-meta">
-                        <div class="platform-icon">🍎</div>
-                        <span class="badge badge-webapp">Web App</span>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            Launch Report 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Daily Sync</span>
                     </div>
-                    <div class="card-title">QC One Inspection Portal</div>
-                    <div class="card-desc">Individual container inspection reports, quality grades, defect alerts, and lab logs.</div>
-                </div>
-                <div class="card-footer">
-                    <span class="card-footer-link">
-                        View QC Report 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span class="refresh-tag">Live Feed</span>
-                </div>
-            </a>
+                </a>
 
+                <a href="https://agri.qcone.com/reports/10013297" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">🍎</div>
+                            <span class="badge badge-webapp">Web App</span>
+                        </div>
+                        <div class="card-title">QC One Inspection Portal</div>
+                        <div class="card-desc">Container inspection reports, quality grades, defect alerts, and lab logs.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            View Report 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Live Feed</span>
+                    </div>
+                </a>
+            </div>
         </div>
 
         <!-- SECTION 2: REGISTERS & TEAM SYNC -->
-        <div class="section-header">
-            <span class="section-title">Data Registers & Team Sync</span>
-            <div class="section-line"></div>
-        </div>
+        <div class="section-group category-sec registers">
+            <div class="section-header">
+                <span class="section-title">Data Registers & Team Sync</span>
+                <div class="section-line"></div>
+            </div>
 
-        <div class="grid">
-
-            <a href="https://app.notion.com/p/iginternational/Claim-s-deck-e722baf654d5437bbe2eeb0572273d5a#14034e88d8f38004a57bc74a66e373d0" target="_blank" class="card">
-                <div class="card-top">
-                    <div class="card-meta">
-                        <div class="platform-icon">📝</div>
-                        <span class="badge badge-notion">Notion Workspace</span>
+            <div class="grid">
+                <a href="https://app.notion.com/p/iginternational/Claim-s-deck-e722baf654d5437bbe2eeb0572273d5a#14034e88d8f38004a57bc74a66e373d0" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">📝</div>
+                            <span class="badge badge-notion">Notion Workspace</span>
+                        </div>
+                        <div class="card-title">Claim's Deck (Notion Hub)</div>
+                        <div class="card-desc">Quality Claims team workspace tracking live database views & ticket counts.</div>
                     </div>
-                    <div class="card-title">Claim's deck (Notion Hub)</div>
-                    <div class="card-desc">Quality Claims WhatsApp team workspace tracking live database views, ticket counts, and team views.</div>
-                </div>
-                <div class="card-footer">
-                    <span class="card-footer-link">
-                        Open Notion Deck 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span class="refresh-tag">Team Active</span>
-                </div>
-            </a>
-
-            <a href="teamsync.html" target="_blank" class="card">
-                <div class="card-top">
-                    <div class="card-meta">
-                        <div class="platform-icon">⚡</div>
-                        <span class="badge badge-html">TeamSync Web App</span>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            Open Notion Deck 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Active</span>
                     </div>
-                    <div class="card-title">Claims Register (TeamSync App)</div>
-                    <div class="card-desc">Data entry form to create, sync, and update claims, party information, and defect entries.</div>
-                </div>
-                <div class="card-footer">
-                    <span class="card-footer-link">
-                        Open TeamSync 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span class="refresh-tag">Form Portal</span>
-                </div>
-            </a>
+                </a>
 
-            <a href="https://docs.google.com/spreadsheets/d/1AMQlJRpIBUEvm4V9ugZS5BWutHSrvJL-RIPSYCWNnYY/edit?gid=294814046#gid=294814046" target="_blank" class="card">
-                <div class="card-top">
-                    <div class="card-meta">
-                        <div class="platform-icon">📗</div>
-                        <span class="badge badge-sheet">Google Sheets</span>
+                <a href="teamsync.html" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">⚡</div>
+                            <span class="badge badge-html">TeamSync App</span>
+                        </div>
+                        <div class="card-title">Claims Register (TeamSync)</div>
+                        <div class="card-desc">Data entry form to create, sync, and update claims and party details.</div>
                     </div>
-                    <div class="card-title">Claim Register Sheet</div>
-                    <div class="card-desc">Live Master Excel register tracking cost sheet stages, relationship managers, and ticket numbers.</div>
-                </div>
-                <div class="card-footer">
-                    <span class="card-footer-link">
-                        Open Sheet 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span class="refresh-tag">Live Edit</span>
-                </div>
-            </a>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            Open TeamSync 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Form Portal</span>
+                    </div>
+                </a>
 
+                <a href="https://docs.google.com/spreadsheets/d/1AMQlJRpIBUEvm4V9ugZS5BWutHSrvJL-RIPSYCWNnYY/edit?gid=294814046#gid=294814046" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">📗</div>
+                            <span class="badge badge-sheet">Google Sheets</span>
+                        </div>
+                        <div class="card-title">Claim Register Sheet</div>
+                        <div class="card-desc">Live Master Excel register tracking cost sheet stages and ticket numbers.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            Open Sheet 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Live Edit</span>
+                    </div>
+                </a>
+            </div>
         </div>
 
         <!-- SECTION 3: IMPORT & LOGISTICS -->
-        <div class="section-header">
-            <span class="section-title">Import & Logistics</span>
-            <div class="section-line"></div>
-        </div>
+        <div class="section-group category-sec logistics">
+            <div class="section-header">
+                <span class="section-title">Import & Logistics</span>
+                <div class="section-line"></div>
+            </div>
 
-        <div class="grid">
-
-            <a href="https://datastudio.google.com/reporting/b9a70b57-68cc-4481-8391-f81d664ba095/page/d1KXC" target="_blank" class="card">
-                <div class="card-top">
-                    <div class="card-meta">
-                        <div class="platform-icon">📦</div>
-                        <span class="badge badge-looker">Looker Studio</span>
+            <div class="grid">
+                <a href="https://datastudio.google.com/reporting/b9a70b57-68cc-4481-8391-f81d664ba095/page/d1KXC" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">📦</div>
+                            <span class="badge badge-looker">Looker Studio</span>
+                        </div>
+                        <div class="card-title">Import Management Dashboard</div>
+                        <div class="card-desc">Overview of PO statuses, product varieties, shipping lines, and port arrivals.</div>
                     </div>
-                    <div class="card-title">Import Management Dashboard</div>
-                    <div class="card-desc">Overview of total PO statuses, product varieties, shipping lines, and port arrivals.</div>
-                </div>
-                <div class="card-footer">
-                    <span class="card-footer-link">
-                        Launch Dashboard 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span class="refresh-tag">Daily Sync</span>
-                </div>
-            </a>
-
-            <a href="cold-chain.html" target="_blank" class="card">
-                <div class="card-top">
-                    <div class="card-meta">
-                        <div class="platform-icon">🌡️</div>
-                        <span class="badge badge-html">Interactive Dashboard</span>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            Launch Dashboard 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Daily Sync</span>
                     </div>
-                    <div class="card-title">Cold Chain Temperature Weekly Review</div>
-                    <div class="card-desc">Mumbai & Bangalore Distribution Centres weekly temperature compliance, chamber metrics, and candle charts.</div>
-                </div>
-                <div class="card-footer">
-                    <span class="card-footer-link">
-                        Open Dashboard 
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                    <span class="refresh-tag">Weekly Review</span>
-                </div>
-            </a>
+                </a>
 
+                <a href="cold-chain.html" target="_blank" class="card">
+                    <div class="card-top">
+                        <div class="card-meta">
+                            <div class="platform-icon">🌡️</div>
+                            <span class="badge badge-html">Interactive Dashboard</span>
+                        </div>
+                        <div class="card-title">Cold Chain Temperature Review</div>
+                        <div class="card-desc">Mumbai & Bangalore Distribution Centres weekly temperature compliance and candle charts.</div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-footer-link">
+                            Open Dashboard 
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <span class="refresh-tag">Weekly Review</span>
+                    </div>
+                </a>
+            </div>
         </div>
 
     </div>
 
-    <!-- Quick Search Script -->
+    <!-- Scripts -->
     <script>
         function filterCards() {
             let input = document.getElementById('searchInput').value.toLowerCase();
@@ -313,6 +346,22 @@
                     cards[i].style.display = "flex";
                 } else {
                     cards[i].style.display = "none";
+                }
+            }
+        }
+
+        function filterCategory(cat, btn) {
+            let tabs = document.getElementsByClassName('tab-btn');
+            for (let t of tabs) t.classList.remove('active');
+            btn.classList.add('active');
+
+            let sections = document.getElementsByClassName('category-sec');
+            for (let sec of sections) {
+                if (cat === 'all' || sec.classList.contains(cat)) {
+                    sec.style.display = 'block';
+                    if (sec.tagName === 'A') sec.style.display = 'flex';
+                } else {
+                    sec.style.display = 'none';
                 }
             }
         }
