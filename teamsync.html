@@ -28,7 +28,7 @@
         .status-dot { width: 7px; height: 7px; background-color: #22c55e; border-radius: 50%; box-shadow: 0 0 6px rgba(34, 197, 94, 0.6); }
 
         /* Header Buttons */
-        .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; position: relative; }
         .btn { padding: 8px 16px; border-radius: 6px; font-size: 0.825rem; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; transition: all 0.2s; }
         .btn-navy { background-color: #17385c; color: #ffffff; border: 1px solid rgba(255,255,255,0.15); }
         .btn-navy:hover { background-color: #204875; }
@@ -38,6 +38,11 @@
         .btn-blue:hover { background-color: #1e40af; }
         .btn-green { background-color: #059669; color: #ffffff; }
         .btn-green:hover { background-color: #047857; }
+
+        /* Export Options Dropdown Menu */
+        .export-dropdown { display: none; position: absolute; right: 0; top: 42px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100; min-width: 150px; overflow: hidden; }
+        .export-dropdown button { width: 100%; padding: 10px 16px; text-align: left; background: none; border: none; font-size: 0.85rem; font-weight: 600; color: #1e293b; cursor: pointer; }
+        .export-dropdown button:hover { background-color: #f1f5f9; color: #2563eb; }
 
         /* Main Container */
         .container { max-width: 1240px; margin: 24px auto; padding: 0 20px; }
@@ -70,6 +75,16 @@
         .btn-clear { background-color: #ffffff; color: #334155; border: 1px solid #cbd5e1; padding: 10px 24px; font-size: 0.9rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background-color 0.2s; }
         .btn-clear:hover { background-color: #f1f5f9; }
         .version-tag { margin-top: 16px; font-size: 0.75rem; color: #94a3b8; text-align: center; }
+
+        /* Register View Styling */
+        #registerView { display: none; }
+        .filter-card { background-color: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 20px; margin-bottom: 20px; }
+        .table-card { background-color: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .claims-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .claims-table th { background-color: #0d2137; color: #ffffff; padding: 12px 16px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .claims-table td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; font-weight: 600; color: #334155; }
+        .claims-table tr:hover { background-color: #f8fafc; }
+        .btn-filter-clear { padding: 8px 16px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 600; height: 38px; align-self: flex-end; }
     </style>
 </head>
 <body>
@@ -89,249 +104,341 @@
         <div class="header-actions">
             <button class="btn btn-navy" id="syncBtn" onclick="triggerSync()">⚙ Sync</button>
             <button class="btn btn-navy" onclick="location.reload()">🔄 Refresh</button>
-            <button class="btn btn-gold">+ New Entry</button>
-            <button class="btn btn-blue">Register (4427)</button>
-            <button class="btn btn-blue">↑ Import Excel</button>
-            <button class="btn btn-green">↓ Export Excel</button>
+            <button class="btn btn-navy" id="btnNewEntry" onclick="showFormView()">+ New Entry</button>
+            <button class="btn btn-gold" id="btnRegister" onclick="showRegisterView()">Register (4427)</button>
+            <button class="btn btn-blue" onclick="triggerImport()">↑ Import Excel</button>
+            
+            <!-- Export with Dropdown Options -->
+            <button class="btn btn-green" onclick="toggleExportMenu(event)">↓ Export Excel</button>
+            <div id="exportMenu" class="export-dropdown">
+                <button onclick="exportFile('xlsx')">📊 Export as Excel (.xlsx)</button>
+                <button onclick="exportFile('csv')">📄 Export as CSV (.csv)</button>
+            </div>
+
+            <input type="file" id="excelFileInput" accept=".csv, .xlsx, .xls" style="display: none;" onchange="handleFileImport(event)">
         </div>
     </header>
 
-    <!-- Main Container Form -->
-    <form id="claimsForm" onsubmit="handleSaveRecord(event)">
-        <div class="container">
-            
-            <!-- 1. Party & Ownership Section -->
-            <div class="form-section">
-                <div class="section-header" onclick="toggleSection(this)">
-                    <span>Party & Ownership</span>
-                    <span class="toggle-icon">−</span>
-                </div>
-                <div class="form-content">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Party Name <span class="req">*</span></label>
-                            <input type="text" id="partyName" class="form-control" placeholder="Type to search or add new...">
-                        </div>
-                        <div class="form-group">
-                            <label>Party Type</label>
-                            <select class="form-control">
-                                <option>— Select —</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Country</label>
-                            <input type="text" class="form-control" placeholder="Type to search or add new...">
-                        </div>
-                        <div class="form-group">
-                            <label>Location</label>
-                            <input type="text" class="form-control" placeholder="Type to search or add new...">
-                        </div>
-                        <div class="form-group">
-                            <label>Relationship Manager</label>
-                            <input type="text" class="form-control" placeholder="Type to search or add new...">
-                        </div>
-                        <div class="form-group">
-                            <label>Claims Owner</label>
-                            <input type="text" class="form-control" placeholder="Type to search or add new...">
+    <!-- VIEW 1: DATA ENTRY FORM VIEW -->
+    <div id="formView">
+        <form id="claimsForm" onsubmit="handleSaveRecord(event)">
+            <div class="container">
+                
+                <!-- 1. Party & Ownership Section -->
+                <div class="form-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span>Party & Ownership</span>
+                        <span class="toggle-icon">−</span>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Party Name <span class="req">*</span></label>
+                                <input type="text" id="partyName" class="form-control" placeholder="Type to search or add new...">
+                            </div>
+                            <div class="form-group">
+                                <label>Party Type</label>
+                                <select class="form-control">
+                                    <option>— Select —</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Country</label>
+                                <input type="text" class="form-control" placeholder="Type to search or add new...">
+                            </div>
+                            <div class="form-group">
+                                <label>Location</label>
+                                <input type="text" class="form-control" placeholder="Type to search or add new...">
+                            </div>
+                            <div class="form-group">
+                                <label>Relationship Manager</label>
+                                <input type="text" class="form-control" placeholder="Type to search or add new...">
+                            </div>
+                            <div class="form-group">
+                                <label>Claims Owner</label>
+                                <input type="text" class="form-control" placeholder="Type to search or add new...">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 2. Shipment Section -->
-            <div class="form-section">
-                <div class="section-header" onclick="toggleSection(this)">
-                    <span>Shipment</span>
-                    <span class="toggle-icon">−</span>
-                </div>
-                <div class="form-content">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>BL NO.</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>CONTAINER NO. <span class="req">*</span></label>
-                            <input type="text" id="containerNo" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>NO. OF CONTAINERS</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>ETA</label>
-                            <input type="date" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>PRODUCT</label>
-                            <input type="text" class="form-control" placeholder="Type to search or add new...">
-                        </div>
-                        <div class="form-group">
-                            <label>BRAND</label>
-                            <input type="text" class="form-control" placeholder="Type to search or add new...">
-                        </div>
-                        <div class="form-group">
-                            <label>TOTAL BOXES</label>
-                            <input type="text" class="form-control">
+                <!-- 2. Shipment Section -->
+                <div class="form-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span>Shipment</span>
+                        <span class="toggle-icon">−</span>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>BL NO.</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>CONTAINER NO. <span class="req">*</span></label>
+                                <input type="text" id="containerNo" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>NO. OF CONTAINERS</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>ETA</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>PRODUCT</label>
+                                <input type="text" class="form-control" placeholder="Type to search or add new...">
+                            </div>
+                            <div class="form-group">
+                                <label>BRAND</label>
+                                <input type="text" class="form-control" placeholder="Type to search or add new...">
+                            </div>
+                            <div class="form-group">
+                                <label>TOTAL BOXES</label>
+                                <input type="text" class="form-control">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 3. Claim Details Section -->
-            <div class="form-section">
-                <div class="section-header" onclick="toggleSection(this)">
-                    <span>Claim Details</span>
-                    <span class="toggle-icon">−</span>
-                </div>
-                <div class="form-content">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Claim Date</label>
-                            <input type="date" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Nature of Claim</label>
-                            <select class="form-control">
-                                <option>— Select —</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Claim Sub Group</label>
-                            <select class="form-control">
-                                <option>— Select —</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Type of Issue</label>
-                            <select class="form-control">
-                                <option>— Select —</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Stage</label>
-                            <select class="form-control">
-                                <option>— Select —</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select class="form-control">
-                                <option>— Select —</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Ticket No. <span class="req">*</span></label>
-                            <input type="text" id="ticketNoInput" class="form-control" value="9156">
-                            <span class="sub-text">✓ Next free number from Google Sheet</span>
-                        </div>
-                        <div class="form-group">
-                            <label>Major Defects %</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Minor Defects %</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Short Qty</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Broken Crates</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Inspection Date</label>
-                            <input type="date" class="form-control">
+                <!-- 3. Claim Details Section -->
+                <div class="form-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span>Claim Details</span>
+                        <span class="toggle-icon">−</span>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Claim Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Nature of Claim</label>
+                                <select class="form-control">
+                                    <option>— Select —</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Claim Sub Group</label>
+                                <select class="form-control">
+                                    <option>— Select —</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Type of Issue</label>
+                                <select class="form-control">
+                                    <option>— Select —</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Stage</label>
+                                <select class="form-control">
+                                    <option>— Select —</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select class="form-control">
+                                    <option>— Select —</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Ticket No. <span class="req">*</span></label>
+                                <input type="text" id="ticketNoInput" class="form-control" value="9156">
+                                <span class="sub-text">✓ Next free number from Google Sheet</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Major Defects %</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Minor Defects %</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Short Qty</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Broken Crates</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Inspection Date</label>
+                                <input type="date" class="form-control">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 4. Financials Section -->
-            <div class="form-section">
-                <div class="section-header" onclick="toggleSection(this)">
-                    <span>Financials</span>
-                    <span class="toggle-icon">−</span>
-                </div>
-                <div class="form-content">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Base Currency</label>
-                            <select class="form-control">
-                                <option>— Select —</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Exchange Rate</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Claim Amount Base Currency</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Claim Amount (INR)</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Closed Amount Foreign Currency</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Closed Amount (INR)</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Closed Date</label>
-                            <input type="date" class="form-control">
+                <!-- 4. Financials Section -->
+                <div class="form-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span>Financials</span>
+                        <span class="toggle-icon">−</span>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Base Currency</label>
+                                <select class="form-control">
+                                    <option>— Select —</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Exchange Rate</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Claim Amount Base Currency</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Claim Amount (INR)</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Closed Amount Foreign Currency</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Closed Amount (INR)</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Closed Date</label>
+                                <input type="date" class="form-control">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 5. Detention, Closure & Remarks Section -->
-            <div class="form-section">
-                <div class="section-header" onclick="toggleSection(this)">
-                    <span>Detention, Closure & Remarks</span>
-                    <span class="toggle-icon">−</span>
-                </div>
-                <div class="form-content">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Actual Detention Free Days Received</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Actual Detention Paid</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>Remarks</label>
-                            <textarea class="form-control" rows="3"></textarea>
-                        </div>
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>Ticket Close Remark</label>
-                            <textarea class="form-control" rows="3"></textarea>
+                <!-- 5. Detention, Closure & Remarks Section -->
+                <div class="form-section">
+                    <div class="section-header" onclick="toggleSection(this)">
+                        <span>Detention, Closure & Remarks</span>
+                        <span class="toggle-icon">−</span>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Actual Detention Free Days Received</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Actual Detention Paid</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Remarks</label>
+                                <textarea class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Ticket Close Remark</label>
+                                <textarea class="form-control" rows="3"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Bottom Save / Clear Action Buttons -->
+                <div class="form-footer-actions">
+                    <button type="submit" class="btn-save">Save Record</button>
+                    <button type="button" class="btn-clear" onclick="clearForm()">Clear</button>
+                </div>
+
+                <div class="version-tag">Page version 3 • ticket no. shown before saving</div>
+
             </div>
+        </form>
+    </div>
 
-            <!-- Bottom Save / Clear Action Buttons -->
-            <div class="form-footer-actions">
-                <button type="submit" class="btn-save">Save Record</button>
-                <button type="button" class="btn-clear" onclick="clearForm()">Clear</button>
+    <!-- VIEW 2: MASTER CLAIMS REGISTER VIEW -->
+    <div id="registerView" class="container">
+        <div class="filter-card">
+            <div class="form-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                <div class="form-group">
+                    <label>SEARCH</label>
+                    <input type="text" class="form-control" placeholder="Ref no., ticket, party, container, p...">
+                </div>
+                <div class="form-group">
+                    <label>STATUS</label>
+                    <select class="form-control"><option>All</option></select>
+                </div>
+                <div class="form-group">
+                    <label>COUNTRY</label>
+                    <select class="form-control"><option>All countrys</option></select>
+                </div>
+                <div class="form-group">
+                    <label>BRAND</label>
+                    <select class="form-control"><option>All brands</option></select>
+                </div>
+                <div class="form-group">
+                    <label>NATURE OF CLAIM</label>
+                    <select class="form-control"><option>All nature of claims</option></select>
+                </div>
+                <div class="form-group">
+                    <label>CLAIM DATE FROM</label>
+                    <input type="date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>CLAIM DATE TO</label>
+                    <input type="date" class="form-control">
+                </div>
+                <button type="button" class="btn-filter-clear">Clear filters</button>
             </div>
-
-            <div class="version-tag">Page version 3 • ticket no. shown before saving</div>
-
         </div>
-    </form>
+
+        <div class="table-card">
+            <table class="claims-table">
+                <thead>
+                    <tr>
+                        <th>REF NO.</th>
+                        <th>TICKET NO.</th>
+                        <th>PARTY NAME</th>
+                        <th>CONTAINER NO.</th>
+                    </tr>
+                </thead>
+                <tbody id="registerTableBody">
+                    <tr><td>CLM-2026-0001</td><td>8906</td><td>BKS IMPEX</td><td>CGMU6590308</td></tr>
+                    <tr><td>CLM-2026-0002</td><td>8905</td><td>IMPERIAL FRUITS</td><td>AMCU9408526</td></tr>
+                    <tr><td>CLM-2026-0003</td><td>8904</td><td>IMPERIAL FRUITS</td><td>CGMU5667344</td></tr>
+                    <tr><td>CLM-2026-0004</td><td>8903</td><td>IMPERIAL FRUITS</td><td>CGMU5513009</td></tr>
+                    <tr><td>CLM-2026-0005</td><td>8902</td><td>IMPERIAL FRUITS</td><td>CGMU5344188</td></tr>
+                    <tr><td>CLM-2026-0006</td><td>8901</td><td>IMPERIAL FRUITS</td><td>CGMU6909904</td></tr>
+                    <tr><td>CLM-2026-0007</td><td>8900</td><td>INDU ENTERPRISES</td><td>FBIU5242664</td></tr>
+                    <tr><td>CLM-2026-0008</td><td>8899</td><td>IMPERIAL FRUITS</td><td>CAIU5509590</td></tr>
+                    <tr><td>CLM-2026-0009</td><td>8898</td><td>IMPERIAL FRUITS</td><td>CGMU5058414</td></tr>
+                    <tr><td>CLM-2026-0010</td><td>8897</td><td>BKS IMPEX</td><td>HLBU6031364</td></tr>
+                    <tr><td>CLM-2026-0011</td><td>8896</td><td>BKS IMPEX</td><td>SEGU9359813</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <!-- JavaScript Handling -->
     <script>
+        // Switch between Views
+        function showRegisterView() {
+            document.getElementById('formView').style.display = 'none';
+            document.getElementById('registerView').style.display = 'block';
+            
+            document.getElementById('btnRegister').className = 'btn btn-gold';
+            document.getElementById('btnNewEntry').className = 'btn btn-navy';
+            closeExportMenu();
+        }
+
+        function showFormView() {
+            document.getElementById('registerView').style.display = 'none';
+            document.getElementById('formView').style.display = 'block';
+            
+            document.getElementById('btnNewEntry').className = 'btn btn-gold';
+            document.getElementById('btnRegister').className = 'btn btn-navy';
+            closeExportMenu();
+        }
+
         // Accordion Toggle logic (+ / - signs)
         function toggleSection(headerElement) {
             const content = headerElement.nextElementSibling;
@@ -354,14 +461,12 @@
             const containerInput = document.getElementById('containerNo');
             const ticketInput = document.getElementById('ticketNoInput');
             
-            // Remove previous error states
             partyInput.classList.remove('error');
             containerInput.classList.remove('error');
 
             const partyVal = partyInput.value.trim();
             const containerVal = containerInput.value.trim();
 
-            // Strict Validation: Prevent empty submissions
             if (!partyVal || !containerVal) {
                 let missing = [];
                 if (!partyVal) {
@@ -374,24 +479,27 @@
                 }
                 
                 alert(`⚠️ Cannot save empty record! Please fill in the required field(s): ${missing.join(', ')}.`);
-                return; // STOP execution: Ticket number will NOT change!
+                return;
             }
 
             const currentTicket = ticketInput.value;
             alert(`✅ Record for Ticket #${currentTicket} saved and synced successfully!`);
             
-            // Auto increment ticket number ONLY after valid save
+            // Add saved record into Register table automatically
+            const tableBody = document.getElementById('registerTableBody');
+            const newRow = `<tr><td>CLM-2026-NEW</td><td>${currentTicket}</td><td>${partyVal.toUpperCase()}</td><td>${containerVal.toUpperCase()}</td></tr>`;
+            tableBody.insertAdjacentHTML('afterbegin', newRow);
+
             let numericVal = parseInt(currentTicket);
             if (!isNaN(numericVal)) {
                 ticketInput.value = numericVal + 1;
             }
 
-            // Clear inputs after successful save
             partyInput.value = '';
             containerInput.value = '';
         }
 
-        // Clear Form Functionality
+        // Clear Form
         function clearForm() {
             document.getElementById('claimsForm').reset();
             document.getElementById('partyName').classList.remove('error');
@@ -399,15 +507,57 @@
             document.getElementById('ticketNoInput').value = "9156";
         }
 
-        // Header API Sync Trigger
+        // Header Action Triggers
         function triggerSync() {
             const syncBtn = document.getElementById('syncBtn');
             syncBtn.innerText = "⚙ Syncing...";
-            
             setTimeout(() => {
                 alert("API Sync triggered successfully!");
                 syncBtn.innerText = "⚙ Sync";
             }, 800);
+        }
+
+        function triggerImport() {
+            document.getElementById('excelFileInput').click();
+        }
+
+        function handleFileImport(e) {
+            const file = e.target.files[0];
+            if (file) {
+                alert(`Selected file "${file.name}" ready to import into Claims Register!`);
+            }
+        }
+
+        // Export Option Handlers
+        function toggleExportMenu(event) {
+            event.stopPropagation();
+            const menu = document.getElementById('exportMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function closeExportMenu() {
+            document.getElementById('exportMenu').style.display = 'none';
+        }
+
+        window.onclick = function() {
+            closeExportMenu();
+        }
+
+        function exportFile(format) {
+            closeExportMenu();
+            const csvData = "REF NO.,TICKET NO.,PARTY NAME,CONTAINER NO.\nCLM-2026-0001,8906,BKS IMPEX,CGMU6590308\nCLM-2026-0002,8905,IMPERIAL FRUITS,AMCU9408526";
+            
+            let mimeType = format === 'xlsx' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'text/csv';
+            let extension = format === 'xlsx' ? 'xlsx' : 'csv';
+            
+            const blob = new Blob([csvData], { type: mimeType });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `Claims_Register_Export.${extension}`);
+            a.click();
+            
+            alert(`Successfully exported register as .${extension.toUpperCase()}!`);
         }
     </script>
 </body>
