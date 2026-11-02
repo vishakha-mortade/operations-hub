@@ -87,6 +87,7 @@
         .btn-filter-clear { padding: 8px 16px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 600; height: 38px; align-self: flex-end; }
         
         .badge-closed { background-color: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+        .badge-open { background-color: #fef3c7; color: #b45309; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
         .action-link { color: #2563eb; text-decoration: none; margin-right: 8px; font-weight: 600; cursor: pointer; }
         .action-link.delete { color: #dc2626; }
         .records-count-bar { margin-bottom: 12px; font-size: 0.85rem; font-weight: 600; color: #475569; }
@@ -502,7 +503,7 @@
                         <td><span class="badge-closed">Closed</span></td>
                         <td>495</td>
                         <td>26</td>
-                        <td><span class="action-link">Edit</span><span class="action-link delete">Delete</span></td>
+                        <td><span class="action-link" onclick="editRow(this)">Edit</span><span class="action-link delete" onclick="deleteRow(this)">Delete</span></td>
                     </tr>
                     <tr>
                         <td>CLM-2026-0784</td>
@@ -516,7 +517,7 @@
                         <td><span class="badge-closed">Closed</span></td>
                         <td>586</td>
                         <td>13</td>
-                        <td><span class="action-link">Edit</span><span class="action-link delete">Delete</span></td>
+                        <td><span class="action-link" onclick="editRow(this)">Edit</span><span class="action-link delete" onclick="deleteRow(this)">Delete</span></td>
                     </tr>
                     <tr>
                         <td>CLM-2026-1739</td>
@@ -530,7 +531,7 @@
                         <td><span class="badge-closed">Closed</span></td>
                         <td>31</td>
                         <td>12</td>
-                        <td><span class="action-link">Edit</span><span class="action-link delete">Delete</span></td>
+                        <td><span class="action-link" onclick="editRow(this)">Edit</span><span class="action-link delete" onclick="deleteRow(this)">Delete</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -587,6 +588,31 @@
             }
         }
 
+        function editRow(element) {
+            const row = element.closest('tr');
+            const cells = row.querySelectorAll('td');
+            
+            document.getElementById('ticketNoInput').value = cells[1].innerText;
+            document.getElementById('partyName').value = cells[2].innerText;
+            document.getElementById('containerNo').value = cells[3].innerText;
+            document.getElementById('inputClaimDate').value = cells[4].innerText;
+            document.getElementById('inputProduct').value = cells[5].innerText;
+            document.getElementById('inputBrand').value = cells[6].innerText;
+            document.getElementById('inputCountry').value = cells[7].innerText;
+
+            showFormView();
+            alert(`📝 Loaded record for Ticket #${cells[1].innerText} into form for editing.`);
+        }
+
+        function deleteRow(element) {
+            if (confirm("Are you sure you want to delete this record?")) {
+                const row = element.closest('tr');
+                row.remove();
+                updateRecordCount();
+                alert("🗑️ Record deleted successfully!");
+            }
+        }
+
         function handleSaveRecord(event) {
             event.preventDefault();
             
@@ -620,7 +646,7 @@
             let brand = brandInput.value.trim() ? brandInput.value.trim().toUpperCase() : "STANDARD";
             let country = countryInput.value.trim() ? countryInput.value.trim().toUpperCase() : "INDIA";
             let status = statusInput.value !== "— Select —" ? statusInput.value : "Open";
-            let statusBadge = status === "Closed" ? '<span class="badge-closed">Closed</span>' : '<span style="color:#d97706; font-weight:700;">Open</span>';
+            let statusBadge = status === "Closed" ? '<span class="badge-closed">Closed</span>' : '<span class="badge-open">Open</span>';
 
             alert(`✅ Record for Ticket #${ticketVal} saved and synced successfully!`);
             
@@ -637,7 +663,7 @@
                 <td>${statusBadge}</td>
                 <td>1</td>
                 <td>1</td>
-                <td><span class="action-link">Edit</span><span class="action-link delete">Delete</span></td>
+                <td><span class="action-link" onclick="editRow(this)">Edit</span><span class="action-link delete" onclick="deleteRow(this)">Delete</span></td>
             </tr>`;
             tableBody.insertAdjacentHTML('afterbegin', newRow);
 
@@ -658,13 +684,11 @@
             document.getElementById('ticketNoInput').value = "9156";
         }
 
-        // Full Search & Filter Logic across all rows
         function applyTableFilters() {
             const query = document.getElementById('filterSearch').value.toLowerCase();
             const statusFilter = document.getElementById('filterStatus').value;
             const countryFilter = document.getElementById('filterCountry').value;
             const brandFilter = document.getElementById('filterBrand').value;
-            const natureFilter = document.getElementById('filterNature').value;
             
             const rows = document.querySelectorAll('#registerTableBody tr');
             let visibleCount = 0;
