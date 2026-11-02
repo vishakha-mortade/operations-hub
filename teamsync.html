@@ -138,11 +138,15 @@
                             </div>
                             <div class="form-group">
                                 <label>Party Type</label>
-                                <select class="form-control">
+                                <select class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
+                                    <option>CFS</option>
+                                    <option>CHA</option>
+                                    <option>FORWARDER</option>
+                                    <option>INSURANCE COMPANY</option>
+                                    <option>SHIPPING LINE</option>
                                     <option>Shipper</option>
-                                    <option>Importer</option>
-                                    <option>Buyer</option>
+                                    <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -219,37 +223,51 @@
                             </div>
                             <div class="form-group">
                                 <label>Nature of Claim</label>
-                                <select class="form-control">
+                                <select class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
                                     <option>Quality Defect</option>
                                     <option>Shortage</option>
                                     <option>Temperature Variance</option>
+                                    <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Claim Sub Group</label>
-                                <select class="form-control">
+                                <select class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
+                                    <option>Internal QC</option>
+                                    <option>Destination QC</option>
+                                    <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Type of Issue</label>
-                                <select class="form-control">
+                                <select class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
+                                    <option>Rotten / Decay</option>
+                                    <option>Soft Fruit</option>
+                                    <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Stage</label>
-                                <select class="form-control">
+                                <select class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
+                                    <option>CLOSED</option>
+                                    <option>COST SHEET SUBMITTED</option>
+                                    <option>COST SHEET PENDING</option>
+                                    <option>CREDIT NOTE PENDING</option>
+                                    <option>CREDIT NOTE RECEIVED</option>
+                                    <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Status</label>
-                                <select class="form-control">
+                                <select class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
                                     <option>Open</option>
                                     <option>Closed</option>
+                                    <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -291,11 +309,12 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Base Currency</label>
-                                <select class="form-control">
+                                <select class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
                                     <option>USD</option>
                                     <option>INR</option>
                                     <option>EUR</option>
+                                    <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -382,7 +401,6 @@
                         <option value="Closed">Closed</option>
                     </select>
                 </div>
-                <!-- Updated Spelled Country Filter Dropdown with Scrollbar List -->
                 <div class="form-group">
                     <label>COUNTRY</label>
                     <select id="filterCountry" class="form-control" onchange="applyTableFilters()">
@@ -413,7 +431,6 @@
                         <option value="USA">USA</option>
                     </select>
                 </div>
-                <!-- Brand Filter Dropdown List -->
                 <div class="form-group">
                     <label>BRAND</label>
                     <select id="filterBrand" class="form-control" onchange="applyTableFilters()">
@@ -510,6 +527,25 @@
             }
         }
 
+        // Dynamic "+ Add new..." handler for dropdown selects
+        function handleDropdownAdd(selectElement) {
+            if (selectElement.value === "+ Add new...") {
+                let newItem = prompt("Enter new option value:");
+                if (newItem && newItem.trim() !== "") {
+                    let formattedItem = newItem.trim();
+                    // Create new option element
+                    let opt = document.createElement('option');
+                    opt.value = formattedItem;
+                    opt.textContent = formattedItem.toUpperCase();
+                    // Insert before the "+ Add new..." option
+                    selectElement.insertBefore(opt, selectElement.lastElementChild);
+                    selectElement.value = formattedItem.toUpperCase();
+                } else {
+                    selectElement.selectedIndex = 0; // reset if canceled
+                }
+            }
+        }
+
         // Save Record Functionality with Fallbacks
         function handleSaveRecord(event) {
             event.preventDefault();
@@ -531,13 +567,11 @@
                 return;
             }
 
-            // Assign safe defaults for missing fields to keep row structure visible
             if (!containerVal) containerVal = "N/A";
             if (!ticketVal) ticketVal = "9156";
 
             alert(`✅ Record for Ticket #${ticketVal} saved and synced successfully!`);
             
-            // Add saved record into Register table automatically
             const tableBody = document.getElementById('registerTableBody');
             const newRow = `<tr><td>CLM-2026-NEW</td><td>${ticketVal}</td><td>${partyVal.toUpperCase()}</td><td>${containerVal.toUpperCase()}</td></tr>`;
             tableBody.insertAdjacentHTML('afterbegin', newRow);
@@ -574,7 +608,7 @@
             });
         }
 
-        // Working Clear Filters Button
+        // Clear Filters Button
         function clearFilters() {
             document.getElementById('filterSearch').value = '';
             document.getElementById('filterStatus').value = 'All';
