@@ -22,7 +22,7 @@
         header { background-color: var(--primary-dark); color: #ffffff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .header-title h1 { font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
         .header-title h1::after { content: '•'; color: #f59e0b; }
-        .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; display: flex; align-items: center; gap: 12px; }
+        .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .status-badge { display: inline-flex; align-items: center; gap: 6px; color: #4ade80; font-weight: 500; }
         .status-dot { width: 7px; height: 7px; background-color: #4ade80; border-radius: 50%; }
 
@@ -171,7 +171,7 @@
                 </div>
                 <div class="form-group">
                     <label>Ticket No.</label>
-                    <input type="text" class="form-control" value="9146">
+                    <input type="text" id="ticketNoInput" class="form-control" value="9156">
                 </div>
                 <div class="form-group">
                     <label>Major Defects %</label>
@@ -214,30 +214,41 @@
 
     </div>
 
-    <!-- JavaScript Sync Handling -->
+    <!-- JavaScript Handling -->
     <script>
+        // Function to fetch or load the next ticket number automatically on page load
+        async function fetchNextTicketNumber() {
+            const ticketInput = document.getElementById('ticketNoInput');
+            
+            try {
+                // If you hook up an API endpoint later, replace or uncomment below:
+                // const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL');
+                // const data = await response.json();
+                // if (data && data.nextTicket) {
+                //     ticketInput.value = data.nextTicket;
+                // } else {
+                //     ticketInput.value = "9156";
+                // }
+                
+                ticketInput.value = "9156";
+            } catch (error) {
+                console.error("Could not fetch live ticket number, using fallback:", error);
+                ticketInput.value = "9156";
+            }
+        }
+
+        // Run on page load
+        window.addEventListener('DOMContentLoaded', fetchNextTicketNumber);
+
+        // Sync Button function
         function triggerSync() {
             const syncBtn = document.getElementById('syncBtn');
             syncBtn.innerText = "⚙ Syncing...";
             
-            // Your API fetch / Google Sheet Sync Logic goes here:
-            /*
-            fetch('YOUR_GOOGLE_APPS_SCRIPT_OR_API_URL')
-                .then(res => res.json())
-                .then(data => {
-                    alert('Sync completed successfully!');
-                    syncBtn.innerText = "⚙ Sync";
-                })
-                .catch(err => {
-                    console.error(err);
-                    syncBtn.innerText = "⚙ Sync";
-                });
-            */
-
-            // Temporary mock feedback
             setTimeout(() => {
                 alert("API Sync triggered successfully!");
                 syncBtn.innerText = "⚙ Sync";
+                fetchNextTicketNumber();
             }, 800);
         }
     </script>
