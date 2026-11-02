@@ -140,6 +140,9 @@
                                 <label>Party Type</label>
                                 <select class="form-control">
                                     <option>— Select —</option>
+                                    <option>Shipper</option>
+                                    <option>Importer</option>
+                                    <option>Buyer</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -218,6 +221,9 @@
                                 <label>Nature of Claim</label>
                                 <select class="form-control">
                                     <option>— Select —</option>
+                                    <option>Quality Defect</option>
+                                    <option>Shortage</option>
+                                    <option>Temperature Variance</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -242,6 +248,8 @@
                                 <label>Status</label>
                                 <select class="form-control">
                                     <option>— Select —</option>
+                                    <option>Open</option>
+                                    <option>Closed</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -285,6 +293,9 @@
                                 <label>Base Currency</label>
                                 <select class="form-control">
                                     <option>— Select —</option>
+                                    <option>USD</option>
+                                    <option>INR</option>
+                                    <option>EUR</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -361,33 +372,79 @@
             <div class="form-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
                 <div class="form-group">
                     <label>SEARCH</label>
-                    <input type="text" class="form-control" placeholder="Ref no., ticket, party, container, p...">
+                    <input type="text" id="filterSearch" class="form-control" placeholder="Ref no., ticket, party, container, p..." onkeyup="applyTableFilters()">
                 </div>
                 <div class="form-group">
                     <label>STATUS</label>
-                    <select class="form-control"><option>All</option></select>
+                    <select id="filterStatus" class="form-control" onchange="applyTableFilters()">
+                        <option value="All">All</option>
+                        <option value="Open">Open</option>
+                        <option value="Closed">Closed</option>
+                    </select>
                 </div>
+                <!-- Updated Spelled Country Filter Dropdown with Scrollbar List -->
                 <div class="form-group">
                     <label>COUNTRY</label>
-                    <select class="form-control"><option>All countrys</option></select>
+                    <select id="filterCountry" class="form-control" onchange="applyTableFilters()">
+                        <option value="All">All countries</option>
+                        <option value="AFRICA">AFRICA</option>
+                        <option value="ARGENTINA">ARGENTINA</option>
+                        <option value="AUSTRALIA">AUSTRALIA</option>
+                        <option value="BELGIUM">BELGIUM</option>
+                        <option value="BOTSWANA">BOTSWANA</option>
+                        <option value="BRAZIL">BRAZIL</option>
+                        <option value="CANADA">CANADA</option>
+                        <option value="CHILE">CHILE</option>
+                        <option value="CHINA">CHINA</option>
+                        <option value="EGYPT">EGYPT</option>
+                        <option value="FRANCE">FRANCE</option>
+                        <option value="GERMANY">GERMANY</option>
+                        <option value="GREECE">GREECE</option>
+                        <option value="INDIA">INDIA</option>
+                        <option value="IRAN">IRAN</option>
+                        <option value="ITALY">ITALY</option>
+                        <option value="KENYA">KENYA</option>
+                        <option value="MEXICO">MEXICO</option>
+                        <option value="NETHERLANDS">NETHERLANDS</option>
+                        <option value="NEW ZEALAND">NEW ZEALAND</option>
+                        <option value="PERU">PERU</option>
+                        <option value="SOUTH AFRICA">SOUTH AFRICA</option>
+                        <option value="SPAIN">SPAIN</option>
+                        <option value="USA">USA</option>
+                    </select>
                 </div>
+                <!-- Brand Filter Dropdown List -->
                 <div class="form-group">
                     <label>BRAND</label>
-                    <select class="form-control"><option>All brands</option></select>
+                    <select id="filterBrand" class="form-control" onchange="applyTableFilters()">
+                        <option value="All">All brands</option>
+                        <option value="AGO DRAGON">AGO DRAGON</option>
+                        <option value="BEAUTIFUL FRUIT">BEAUTIFUL FRUIT</option>
+                        <option value="BKS">BKS</option>
+                        <option value="DOKKO">DOKKO</option>
+                        <option value="DRAGONFRUIT">DRAGONFRUIT</option>
+                        <option value="IMPERIAL">IMPERIAL</option>
+                        <option value="ZESPRI">ZESPRI</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>NATURE OF CLAIM</label>
-                    <select class="form-control"><option>All nature of claims</option></select>
+                    <select id="filterNature" class="form-control" onchange="applyTableFilters()">
+                        <option value="All">All nature of claims</option>
+                        <option value="Quality Defect">Quality Defect</option>
+                        <option value="Shortage">Shortage</option>
+                        <option value="Temperature Variance">Temperature Variance</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>CLAIM DATE FROM</label>
-                    <input type="date" class="form-control">
+                    <input type="date" id="filterDateFrom" class="form-control" onchange="applyTableFilters()">
                 </div>
                 <div class="form-group">
                     <label>CLAIM DATE TO</label>
-                    <input type="date" class="form-control">
+                    <input type="date" id="filterDateTo" class="form-control" onchange="applyTableFilters()">
                 </div>
-                <button type="button" class="btn-filter-clear">Clear filters</button>
+                <button type="button" class="btn-filter-clear" onclick="clearFilters()">Clear filters</button>
             </div>
         </div>
 
@@ -453,7 +510,7 @@
             }
         }
 
-        // Save Record Functionality with Strict Validation
+        // Save Record Functionality with Fallbacks
         function handleSaveRecord(event) {
             event.preventDefault();
             
@@ -464,33 +521,28 @@
             partyInput.classList.remove('error');
             containerInput.classList.remove('error');
 
-            const partyVal = partyInput.value.trim();
-            const containerVal = containerInput.value.trim();
+            let partyVal = partyInput.value.trim();
+            let containerVal = containerInput.value.trim();
+            let ticketVal = ticketInput.value.trim();
 
-            if (!partyVal || !containerVal) {
-                let missing = [];
-                if (!partyVal) {
-                    partyInput.classList.add('error');
-                    missing.push("Party Name");
-                }
-                if (!containerVal) {
-                    containerInput.classList.add('error');
-                    missing.push("Container No.");
-                }
-                
-                alert(`⚠️ Cannot save empty record! Please fill in the required field(s): ${missing.join(', ')}.`);
+            if (!partyVal) {
+                partyInput.classList.add('error');
+                alert('⚠️ Party Name is required to create a claim record.');
                 return;
             }
 
-            const currentTicket = ticketInput.value;
-            alert(`✅ Record for Ticket #${currentTicket} saved and synced successfully!`);
+            // Assign safe defaults for missing fields to keep row structure visible
+            if (!containerVal) containerVal = "N/A";
+            if (!ticketVal) ticketVal = "9156";
+
+            alert(`✅ Record for Ticket #${ticketVal} saved and synced successfully!`);
             
             // Add saved record into Register table automatically
             const tableBody = document.getElementById('registerTableBody');
-            const newRow = `<tr><td>CLM-2026-NEW</td><td>${currentTicket}</td><td>${partyVal.toUpperCase()}</td><td>${containerVal.toUpperCase()}</td></tr>`;
+            const newRow = `<tr><td>CLM-2026-NEW</td><td>${ticketVal}</td><td>${partyVal.toUpperCase()}</td><td>${containerVal.toUpperCase()}</td></tr>`;
             tableBody.insertAdjacentHTML('afterbegin', newRow);
 
-            let numericVal = parseInt(currentTicket);
+            let numericVal = parseInt(ticketVal);
             if (!isNaN(numericVal)) {
                 ticketInput.value = numericVal + 1;
             }
@@ -505,6 +557,35 @@
             document.getElementById('partyName').classList.remove('error');
             document.getElementById('containerNo').classList.remove('error');
             document.getElementById('ticketNoInput').value = "9156";
+        }
+
+        // Filter Table Rows Functionality
+        function applyTableFilters() {
+            const query = document.getElementById('filterSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#registerTableBody tr');
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Working Clear Filters Button
+        function clearFilters() {
+            document.getElementById('filterSearch').value = '';
+            document.getElementById('filterStatus').value = 'All';
+            document.getElementById('filterCountry').value = 'All';
+            document.getElementById('filterBrand').value = 'All';
+            document.getElementById('filterNature').value = 'All';
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+
+            const rows = document.querySelectorAll('#registerTableBody tr');
+            rows.forEach(row => row.style.display = '');
         }
 
         // Header Action Triggers
