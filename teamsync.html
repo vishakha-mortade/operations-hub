@@ -45,7 +45,7 @@
         .export-dropdown button:hover { background-color: #f1f5f9; color: #2563eb; }
 
         /* Main Container */
-        .container { max-width: 1240px; margin: 24px auto; padding: 0 20px; }
+        .container { max-width: 1380px; margin: 24px auto; padding: 0 20px; }
 
         /* Accordion Cards */
         .form-section { background-color: var(--card-bg); border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); overflow: hidden; }
@@ -81,15 +81,22 @@
         .filter-card { background-color: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 20px; margin-bottom: 20px; }
         .table-card { background-color: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .claims-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .claims-table th { background-color: #0d2137; color: #ffffff; padding: 12px 16px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-        .claims-table td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; font-weight: 600; color: #334155; }
+        .claims-table th { background-color: #0d2137; color: #ffffff; padding: 12px 14px; font-size: 0.725rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+        .claims-table td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; font-size: 0.825rem; font-weight: 600; color: #334155; }
         .claims-table tr:hover { background-color: #f8fafc; }
         .btn-filter-clear { padding: 8px 16px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; cursor: pointer; font-size: 0.85rem; font-weight: 600; height: 38px; align-self: flex-end; }
+        
+        .badge-closed { background-color: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+        .action-link { color: #2563eb; text-decoration: none; margin-right: 8px; font-weight: 600; cursor: pointer; }
+        .action-link.delete { color: #dc2626; }
+        .records-count-bar { margin-bottom: 12px; font-size: 0.85rem; font-weight: 600; color: #475569; }
+        .footer-backup { margin-top: 16px; text-align: center; font-size: 0.8rem; color: #64748b; }
+        .footer-backup a { color: #2563eb; text-decoration: none; margin: 0 4px; }
     </style>
 </head>
 <body>
 
-    <!-- Shared Input Datalists for Search & Auto-complete -->
+    <!-- Shared Input Datalists -->
     <datalist id="partyNameList">
         <option value="BSL LOGISTICS CORP"></option>
         <option value="Bajaj Allianz General Insurance Company"></option>
@@ -97,7 +104,8 @@
         <option value="CAPELINE SHIPPING -GOLDEN - (SD)"></option>
         <option value="BKS IMPEX"></option>
         <option value="IMPERIAL FRUITS"></option>
-        <option value="INDU ENTERPRISES"></option>
+        <option value="ABHINAV AGRO PRODUCTS"></option>
+        <option value="RIVOIRA GIOVANNI & FIGLI S.P.A"></option>
     </datalist>
 
     <datalist id="relManagerList">
@@ -132,7 +140,6 @@
             <button class="btn btn-gold" id="btnRegister" onclick="showRegisterView()">Register (4427)</button>
             <button class="btn btn-blue" onclick="triggerImport()">↑ Import Excel</button>
             
-            <!-- Export with Dropdown Options -->
             <button class="btn btn-green" onclick="toggleExportMenu(event)">↓ Export Excel</button>
             <div id="exportMenu" class="export-dropdown">
                 <button onclick="exportFile('xlsx')">📊 Export as Excel (.xlsx)</button>
@@ -175,7 +182,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Country</label>
-                                <input type="text" class="form-control" placeholder="Type to search or add new...">
+                                <input type="text" id="inputCountry" class="form-control" placeholder="Type to search or add new...">
                             </div>
                             <div class="form-group">
                                 <label>Location</label>
@@ -207,7 +214,7 @@
                             </div>
                             <div class="form-group">
                                 <label>CONTAINER NO. <span class="req">*</span></label>
-                                <input type="text" id="containerNo" class="form-control">
+                                <input type="text" id="containerNo" class="form-control" placeholder="Enter container number...">
                             </div>
                             <div class="form-group">
                                 <label>NO. OF CONTAINERS</label>
@@ -219,11 +226,11 @@
                             </div>
                             <div class="form-group">
                                 <label>PRODUCT</label>
-                                <input type="text" class="form-control" placeholder="Type to search or add new...">
+                                <input type="text" id="inputProduct" class="form-control" placeholder="Type to search or add new...">
                             </div>
                             <div class="form-group">
                                 <label>BRAND</label>
-                                <input type="text" class="form-control" placeholder="Type to search or add new...">
+                                <input type="text" id="inputBrand" class="form-control" placeholder="Type to search or add new...">
                             </div>
                             <div class="form-group">
                                 <label>TOTAL BOXES</label>
@@ -243,11 +250,11 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Claim Date</label>
-                                <input type="date" class="form-control">
+                                <input type="date" id="inputClaimDate" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>Nature of Claim</label>
-                                <select class="form-control" onchange="handleDropdownAdd(this)">
+                                <select id="inputNature" class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
                                     <option>Quality Defect</option>
                                     <option>Shortage</option>
@@ -260,24 +267,7 @@
                                 <select class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
                                     <option>BROKEN CRATES</option>
-                                    <option>CHARGES NOT AS PER CONTRAT</option>
-                                    <option>DETENTION</option>
-                                    <option>EXCESS PAYMENT</option>
-                                    <option>FSSAI/ PQ ISSUE</option>
-                                    <option>OTHERS</option>
-                                    <option>PORT PLUGIN CHARGES</option>
                                     <option>QUALITY ISSUE</option>
-                                    <option>SECURITY DEPOSIT</option>
-                                    <option>SHORT QUANTITY</option>
-                                    <option>BROKEN CRATES, SHORT QUANTITY</option>
-                                    <option>CARTON/BOXES DAMAGED</option>
-                                    <option>CFS NOMINATION</option>
-                                    <option>CHARGES NOT AS PER CONTRACT</option>
-                                    <option>COLOUR</option>
-                                    <option>DAMAGE</option>
-                                    <option>DAMAGE CONTAINER</option>
-                                    <option>DELAY IN CLEARANCE</option>
-                                    <option>DELAY IN CLEARANCE BY CHA</option>
                                     <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
@@ -287,21 +277,6 @@
                                     <option>— Select —</option>
                                     <option>QUALITY ISSUE</option>
                                     <option>SHORT QUANTITY</option>
-                                    <option>POOR QUALITY BINS</option>
-                                    <option>SECURITY DEPOSIT</option>
-                                    <option>DELAYED IN CLEARANCE</option>
-                                    <option>DELAYED IN CLEARANCE - TRANSPORT CFS</option>
-                                    <option>CHARGES NOT AGREED</option>
-                                    <option>QUALITY & CARTON/BOXES DAMAGED</option>
-                                    <option>DAMAGED BOXES/CRATES</option>
-                                    <option>IGM ISSUE</option>
-                                    <option>ACCIDENT/CONTAINER</option>
-                                    <option>DETENTION CHARGES</option>
-                                    <option>OLD DAMAGE</option>
-                                    <option>Accident</option>
-                                    <option>Accident/Container</option>
-                                    <option>CHARGES NOT AS PER CONTRACT</option>
-                                    <option>Charges not Agreed</option>
                                     <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
@@ -311,18 +286,12 @@
                                     <option>— Select —</option>
                                     <option>CLOSED</option>
                                     <option>COST SHEET SUBMITTED</option>
-                                    <option>COST SHEET PENDING</option>
-                                    <option>COST SHEET PENDING/NOTE OF RESERVE ISSUED</option>
-                                    <option>CREDIT NOTE PENDING</option>
-                                    <option>CREDIT NOTE RECEIVED</option>
-                                    <option>Credit note received - ($2,240)</option>
-                                    <option>return swift copy received, Credit note received USD 23,589.75 in total for SEGU9758285+SEGU9821921</option>
                                     <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Status</label>
-                                <select class="form-control" onchange="handleDropdownAdd(this)">
+                                <select id="inputStatus" class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
                                     <option>Open</option>
                                     <option>Closed</option>
@@ -372,7 +341,6 @@
                                     <option>— Select —</option>
                                     <option>USD</option>
                                     <option>INR</option>
-                                    <option>EUR</option>
                                     <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
@@ -464,43 +432,21 @@
                     <label>COUNTRY</label>
                     <select id="filterCountry" class="form-control" onchange="applyTableFilters()">
                         <option value="All">All countries</option>
-                        <option value="AFRICA">AFRICA</option>
-                        <option value="ARGENTINA">ARGENTINA</option>
-                        <option value="AUSTRALIA">AUSTRALIA</option>
-                        <option value="BELGIUM">BELGIUM</option>
-                        <option value="BOTSWANA">BOTSWANA</option>
-                        <option value="BRAZIL">BRAZIL</option>
-                        <option value="CANADA">CANADA</option>
-                        <option value="CHILE">CHILE</option>
-                        <option value="CHINA">CHINA</option>
-                        <option value="EGYPT">EGYPT</option>
-                        <option value="FRANCE">FRANCE</option>
-                        <option value="GERMANY">GERMANY</option>
-                        <option value="GREECE">GREECE</option>
-                        <option value="INDIA">INDIA</option>
-                        <option value="IRAN">IRAN</option>
-                        <option value="ITALY">ITALY</option>
-                        <option value="KENYA">KENYA</option>
-                        <option value="MEXICO">MEXICO</option>
-                        <option value="NETHERLANDS">NETHERLANDS</option>
                         <option value="NEW ZEALAND">NEW ZEALAND</option>
-                        <option value="PERU">PERU</option>
+                        <option value="TURKEY">TURKEY</option>
+                        <option value="ITALY">ITALY</option>
+                        <option value="INDIA">INDIA</option>
+                        <option value="CHILE">CHILE</option>
                         <option value="SOUTH AFRICA">SOUTH AFRICA</option>
-                        <option value="SPAIN">SPAIN</option>
-                        <option value="USA">USA</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>BRAND</label>
                     <select id="filterBrand" class="form-control" onchange="applyTableFilters()">
                         <option value="All">All brands</option>
-                        <option value="AGO DRAGON">AGO DRAGON</option>
-                        <option value="BEAUTIFUL FRUIT">BEAUTIFUL FRUIT</option>
-                        <option value="BKS">BKS</option>
-                        <option value="DOKKO">DOKKO</option>
-                        <option value="DRAGONFRUIT">DRAGONFRUIT</option>
-                        <option value="IMPERIAL">IMPERIAL</option>
                         <option value="ZESPRI">ZESPRI</option>
+                        <option value="I KIWI">I KIWI</option>
+                        <option value="RED DELICIOUS">RED DELICIOUS</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -509,7 +455,6 @@
                         <option value="All">All nature of claims</option>
                         <option value="Quality Defect">Quality Defect</option>
                         <option value="Shortage">Shortage</option>
-                        <option value="Temperature Variance">Temperature Variance</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -524,6 +469,8 @@
             </div>
         </div>
 
+        <div class="records-count-bar" id="recordCountDisplay">Showing 3 of 4427 records</div>
+
         <div class="table-card">
             <table class="claims-table">
                 <thead>
@@ -532,32 +479,73 @@
                         <th>TICKET NO.</th>
                         <th>PARTY NAME</th>
                         <th>CONTAINER NO.</th>
+                        <th>CLAIM DATE</th>
+                        <th>PRODUCT</th>
+                        <th>BRAND</th>
+                        <th>COUNTRY</th>
+                        <th>STATUS</th>
+                        <th>AGING</th>
+                        <th>WK</th>
+                        <th>ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody id="registerTableBody">
-                    <tr><td>CLM-2026-0001</td><td>8906</td><td>BKS IMPEX</td><td>CGMU6590308</td></tr>
-                    <tr><td>CLM-2026-0002</td><td>8905</td><td>IMPERIAL FRUITS</td><td>AMCU9408526</td></tr>
-                    <tr><td>CLM-2026-0003</td><td>8904</td><td>IMPERIAL FRUITS</td><td>CGMU5667344</td></tr>
-                    <tr><td>CLM-2026-0004</td><td>8903</td><td>IMPERIAL FRUITS</td><td>CGMU5513009</td></tr>
-                    <tr><td>CLM-2026-0005</td><td>8902</td><td>IMPERIAL FRUITS</td><td>CGMU5344188</td></tr>
-                    <tr><td>CLM-2026-0006</td><td>8901</td><td>IMPERIAL FRUITS</td><td>CGMU6909904</td></tr>
-                    <tr><td>CLM-2026-0007</td><td>8900</td><td>INDU ENTERPRISES</td><td>FBIU5242664</td></tr>
-                    <tr><td>CLM-2026-0008</td><td>8899</td><td>IMPERIAL FRUITS</td><td>CAIU5509590</td></tr>
-                    <tr><td>CLM-2026-0009</td><td>8898</td><td>IMPERIAL FRUITS</td><td>CGMU5058414</td></tr>
-                    <tr><td>CLM-2026-0010</td><td>8897</td><td>BKS IMPEX</td><td>HLBU6031364</td></tr>
-                    <tr><td>CLM-2026-0011</td><td>8896</td><td>BKS IMPEX</td><td>SEGU9359813</td></tr>
+                    <tr>
+                        <td>CLM-2026-0660</td>
+                        <td>8247</td>
+                        <td>ZESPRI INTERNATIONAL LTD</td>
+                        <td>OERU4181230</td>
+                        <td>2025-06-26</td>
+                        <td>KIWI</td>
+                        <td>ZESPRI</td>
+                        <td>NEW ZEALAND</td>
+                        <td><span class="badge-closed">Closed</span></td>
+                        <td>495</td>
+                        <td>26</td>
+                        <td><span class="action-link">Edit</span><span class="action-link delete">Delete</span></td>
+                    </tr>
+                    <tr>
+                        <td>CLM-2026-0784</td>
+                        <td>8123</td>
+                        <td>ABHINAV AGRO PRODUCTS</td>
+                        <td>FCAU2482300</td>
+                        <td>2025-03-27</td>
+                        <td>KIWI</td>
+                        <td>I KIWI</td>
+                        <td>TURKEY</td>
+                        <td><span class="badge-closed">Closed</span></td>
+                        <td>586</td>
+                        <td>13</td>
+                        <td><span class="action-link">Edit</span><span class="action-link delete">Delete</span></td>
+                    </tr>
+                    <tr>
+                        <td>CLM-2026-1739</td>
+                        <td>7159</td>
+                        <td>RIVOIRA GIOVANNI & FIGLI S.P.A</td>
+                        <td>GESU9578123</td>
+                        <td>2023-03-21</td>
+                        <td>RED DELICIOUS</td>
+                        <td>RED DELICIOUS</td>
+                        <td>ITALY</td>
+                        <td><span class="badge-closed">Closed</span></td>
+                        <td>31</td>
+                        <td>12</td>
+                        <td><span class="action-link">Edit</span><span class="action-link delete">Delete</span></td>
+                    </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="footer-backup">
+            Master data lives in the Google Sheet. <a href="#">Download backup</a> · <a href="#">Restore backup</a>
         </div>
     </div>
 
     <!-- JavaScript Handling -->
     <script>
-        // Switch between Views
         function showRegisterView() {
             document.getElementById('formView').style.display = 'none';
             document.getElementById('registerView').style.display = 'block';
-            
             document.getElementById('btnRegister').className = 'btn btn-gold';
             document.getElementById('btnNewEntry').className = 'btn btn-navy';
             closeExportMenu();
@@ -566,17 +554,14 @@
         function showFormView() {
             document.getElementById('registerView').style.display = 'none';
             document.getElementById('formView').style.display = 'block';
-            
             document.getElementById('btnNewEntry').className = 'btn btn-gold';
             document.getElementById('btnRegister').className = 'btn btn-navy';
             closeExportMenu();
         }
 
-        // Accordion Toggle logic (+ / - signs)
         function toggleSection(headerElement) {
             const content = headerElement.nextElementSibling;
             const icon = headerElement.querySelector('.toggle-icon');
-            
             if (content.style.display === 'none') {
                 content.style.display = 'block';
                 icon.textContent = '−';
@@ -586,7 +571,6 @@
             }
         }
 
-        // Dynamic "+ Add new..." handler for dropdown selects
         function handleDropdownAdd(selectElement) {
             if (selectElement.value === "+ Add new...") {
                 let newItem = prompt("Enter new option value:");
@@ -603,13 +587,17 @@
             }
         }
 
-        // Save Record Functionality with Fallbacks
         function handleSaveRecord(event) {
             event.preventDefault();
             
             const partyInput = document.getElementById('partyName');
             const containerInput = document.getElementById('containerNo');
             const ticketInput = document.getElementById('ticketNoInput');
+            const countryInput = document.getElementById('inputCountry');
+            const productInput = document.getElementById('inputProduct');
+            const brandInput = document.getElementById('inputBrand');
+            const dateInput = document.getElementById('inputClaimDate');
+            const statusInput = document.getElementById('inputStatus');
             
             partyInput.classList.remove('error');
             containerInput.classList.remove('error');
@@ -627,10 +615,30 @@
             if (!containerVal) containerVal = "N/A";
             if (!ticketVal) ticketVal = "9156";
 
+            let cDate = dateInput.value || new Date().toISOString().split('T')[0];
+            let prod = productInput.value.trim() ? productInput.value.trim().toUpperCase() : "GENERAL";
+            let brand = brandInput.value.trim() ? brandInput.value.trim().toUpperCase() : "STANDARD";
+            let country = countryInput.value.trim() ? countryInput.value.trim().toUpperCase() : "INDIA";
+            let status = statusInput.value !== "— Select —" ? statusInput.value : "Open";
+            let statusBadge = status === "Closed" ? '<span class="badge-closed">Closed</span>' : '<span style="color:#d97706; font-weight:700;">Open</span>';
+
             alert(`✅ Record for Ticket #${ticketVal} saved and synced successfully!`);
             
             const tableBody = document.getElementById('registerTableBody');
-            const newRow = `<tr><td>CLM-2026-NEW</td><td>${ticketVal}</td><td>${partyVal.toUpperCase()}</td><td>${containerVal.toUpperCase()}</td></tr>`;
+            const newRow = `<tr>
+                <td>CLM-2026-NEW</td>
+                <td>${ticketVal}</td>
+                <td>${partyVal.toUpperCase()}</td>
+                <td>${containerVal.toUpperCase()}</td>
+                <td>${cDate}</td>
+                <td>${prod}</td>
+                <td>${brand}</td>
+                <td>${country}</td>
+                <td>${statusBadge}</td>
+                <td>1</td>
+                <td>1</td>
+                <td><span class="action-link">Edit</span><span class="action-link delete">Delete</span></td>
+            </tr>`;
             tableBody.insertAdjacentHTML('afterbegin', newRow);
 
             let numericVal = parseInt(ticketVal);
@@ -640,9 +648,9 @@
 
             partyInput.value = '';
             containerInput.value = '';
+            updateRecordCount();
         }
 
-        // Clear Form
         function clearForm() {
             document.getElementById('claimsForm').reset();
             document.getElementById('partyName').classList.remove('error');
@@ -650,22 +658,47 @@
             document.getElementById('ticketNoInput').value = "9156";
         }
 
-        // Filter Table Rows Functionality
+        // Full Search & Filter Logic across all rows
         function applyTableFilters() {
             const query = document.getElementById('filterSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('filterStatus').value;
+            const countryFilter = document.getElementById('filterCountry').value;
+            const brandFilter = document.getElementById('filterBrand').value;
+            const natureFilter = document.getElementById('filterNature').value;
+            
             const rows = document.querySelectorAll('#registerTableBody tr');
+            let visibleCount = 0;
 
             rows.forEach(row => {
                 const text = row.innerText.toLowerCase();
-                if (text.includes(query)) {
+                const matchesQuery = text.includes(query);
+                
+                let matchesStatus = true;
+                if (statusFilter !== 'All') {
+                    matchesStatus = text.includes(statusFilter.toLowerCase());
+                }
+
+                let matchesCountry = true;
+                if (countryFilter !== 'All') {
+                    matchesCountry = text.includes(countryFilter.toLowerCase());
+                }
+
+                let matchesBrand = true;
+                if (brandFilter !== 'All') {
+                    matchesBrand = text.includes(brandFilter.toLowerCase());
+                }
+
+                if (matchesQuery && matchesStatus && matchesCountry && matchesBrand) {
                     row.style.display = '';
+                    visibleCount++;
                 } else {
                     row.style.display = 'none';
                 }
             });
+
+            document.getElementById('recordCountDisplay').innerText = `Showing ${visibleCount} of 4427 records`;
         }
 
-        // Clear Filters Button
         function clearFilters() {
             document.getElementById('filterSearch').value = '';
             document.getElementById('filterStatus').value = 'All';
@@ -677,9 +710,14 @@
 
             const rows = document.querySelectorAll('#registerTableBody tr');
             rows.forEach(row => row.style.display = '');
+            updateRecordCount();
         }
 
-        // Header Action Triggers
+        function updateRecordCount() {
+            const visibleRows = document.querySelectorAll('#registerTableBody tr:not([style*="display: none"])');
+            document.getElementById('recordCountDisplay').innerText = `Showing ${visibleRows.length} of 4427 records`;
+        }
+
         function triggerSync() {
             const syncBtn = document.getElementById('syncBtn');
             syncBtn.innerText = "⚙ Syncing...";
@@ -700,7 +738,6 @@
             }
         }
 
-        // Export Option Handlers
         function toggleExportMenu(event) {
             event.stopPropagation();
             const menu = document.getElementById('exportMenu');
@@ -717,7 +754,7 @@
 
         function exportFile(format) {
             closeExportMenu();
-            const csvData = "REF NO.,TICKET NO.,PARTY NAME,CONTAINER NO.\nCLM-2026-0001,8906,BKS IMPEX,CGMU6590308\nCLM-2026-0002,8905,IMPERIAL FRUITS,AMCU9408526";
+            const csvData = "REF NO.,TICKET NO.,PARTY NAME,CONTAINER NO.,CLAIM DATE,PRODUCT,BRAND,COUNTRY,STATUS\nCLM-2026-0660,8247,ZESPRI INTERNATIONAL LTD,OERU4181230,2025-06-26,KIWI,ZESPRI,NEW ZEALAND,Closed\nCLM-2026-0784,8123,ABHINAV AGRO PRODUCTS,FCAU2482300,2025-03-27,KIWI,I KIWI,TURKEY,Closed";
             
             let mimeType = format === 'xlsx' ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 'text/csv';
             let extension = format === 'xlsx' ? 'xlsx' : 'csv';
