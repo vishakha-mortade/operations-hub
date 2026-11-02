@@ -6,7 +6,7 @@
     <title>Claims Register - TeamSync App</title>
     <style>
         :root {
-            --primary-dark: #0f172a;
+            --primary-dark: #0d2137;
             --primary-blue: #0f2b48;
             --accent-blue: #2563eb;
             --bg-light: #eef2f6;
@@ -20,7 +20,7 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-light); color: var(--text-dark); padding-bottom: 60px; }
 
         /* Header Bar */
-        header { background-color: #0d2137; color: #ffffff; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        header { background-color: var(--primary-dark); color: #ffffff; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .header-title h1 { font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
         .header-title h1::after { content: '•'; color: #f59e0b; }
         .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -48,8 +48,7 @@
         .section-header:hover { background-color: #f8fafc; }
         .toggle-icon { font-weight: 800; font-size: 1.1rem; color: #0f2b48; width: 20px; text-align: center; }
 
-        .form-content { display: none; padding: 20px; border-top: 1px solid #f1f5f9; }
-        .form-content.active { display: block; }
+        .form-content { display: block; padding: 20px; border-top: 1px solid #f1f5f9; }
 
         /* Grid Layout */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
@@ -60,6 +59,9 @@
         .form-group label span.req { color: #ef4444; }
         .form-control { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.875rem; outline: none; background-color: #ffffff; transition: border 0.2s, box-shadow 0.2s; }
         .form-control:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .form-control.error { border-color: #ef4444 !important; background-color: #fef2f2; }
+        
+        .sub-text { font-size: 0.725rem; color: #16a34a; margin-top: 2px; font-weight: 500; }
 
         /* Bottom Action Panel */
         .form-footer-actions { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 0 4px; }
@@ -102,13 +104,13 @@
             <div class="form-section">
                 <div class="section-header" onclick="toggleSection(this)">
                     <span>Party & Ownership</span>
-                    <span class="toggle-icon">+</span>
+                    <span class="toggle-icon">−</span>
                 </div>
                 <div class="form-content">
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Party Name <span class="req">*</span></label>
-                            <input type="text" class="form-control" placeholder="Type to search or add new...">
+                            <input type="text" id="partyName" class="form-control" placeholder="Type to search or add new...">
                         </div>
                         <div class="form-group">
                             <label>Party Type</label>
@@ -140,25 +142,37 @@
             <div class="form-section">
                 <div class="section-header" onclick="toggleSection(this)">
                     <span>Shipment</span>
-                    <span class="toggle-icon">+</span>
+                    <span class="toggle-icon">−</span>
                 </div>
                 <div class="form-content">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Container No.</label>
-                            <input type="text" class="form-control" placeholder="Enter container number...">
+                            <label>BL NO.</label>
+                            <input type="text" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label>BL / HBL No.</label>
-                            <input type="text" class="form-control" placeholder="Enter BL number...">
+                            <label>CONTAINER NO. <span class="req">*</span></label>
+                            <input type="text" id="containerNo" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label>Vessel Name</label>
-                            <input type="text" class="form-control" placeholder="Enter vessel name...">
+                            <label>NO. OF CONTAINERS</label>
+                            <input type="text" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label>ETA Date</label>
+                            <label>ETA</label>
                             <input type="date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>PRODUCT</label>
+                            <input type="text" class="form-control" placeholder="Type to search or add new...">
+                        </div>
+                        <div class="form-group">
+                            <label>BRAND</label>
+                            <input type="text" class="form-control" placeholder="Type to search or add new...">
+                        </div>
+                        <div class="form-group">
+                            <label>TOTAL BOXES</label>
+                            <input type="text" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -168,7 +182,7 @@
             <div class="form-section">
                 <div class="section-header" onclick="toggleSection(this)">
                     <span>Claim Details</span>
-                    <span class="toggle-icon">+</span>
+                    <span class="toggle-icon">−</span>
                 </div>
                 <div class="form-content">
                     <div class="form-grid">
@@ -207,8 +221,9 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Ticket No.</label>
+                            <label>Ticket No. <span class="req">*</span></label>
                             <input type="text" id="ticketNoInput" class="form-control" value="9156">
+                            <span class="sub-text">✓ Next free number from Google Sheet</span>
                         </div>
                         <div class="form-group">
                             <label>Major Defects %</label>
@@ -238,17 +253,39 @@
             <div class="form-section">
                 <div class="section-header" onclick="toggleSection(this)">
                     <span>Financials</span>
-                    <span class="toggle-icon">+</span>
+                    <span class="toggle-icon">−</span>
                 </div>
                 <div class="form-content">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Claim Value ($)</label>
-                            <input type="number" step="0.01" class="form-control" placeholder="0.00">
+                            <label>Base Currency</label>
+                            <select class="form-control">
+                                <option>— Select —</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label>Settled Amount ($)</label>
-                            <input type="number" step="0.01" class="form-control" placeholder="0.00">
+                            <label>Exchange Rate</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Claim Amount Base Currency</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Claim Amount (INR)</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Closed Amount Foreign Currency</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Closed Amount (INR)</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Closed Date</label>
+                            <input type="date" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -258,13 +295,25 @@
             <div class="form-section">
                 <div class="section-header" onclick="toggleSection(this)">
                     <span>Detention, Closure & Remarks</span>
-                    <span class="toggle-icon">+</span>
+                    <span class="toggle-icon">−</span>
                 </div>
                 <div class="form-content">
                     <div class="form-grid">
+                        <div class="form-group">
+                            <label>Actual Detention Free Days Received</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Actual Detention Paid</label>
+                            <input type="text" class="form-control">
+                        </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>Remarks / Notes</label>
-                            <textarea class="form-control" rows="3" placeholder="Enter claim remarks..."></textarea>
+                            <label>Remarks</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Ticket Close Remark</label>
+                            <textarea class="form-control" rows="3"></textarea>
                         </div>
                     </div>
                 </div>
@@ -288,34 +337,65 @@
             const content = headerElement.nextElementSibling;
             const icon = headerElement.querySelector('.toggle-icon');
             
-            if (content.classList.contains('active')) {
-                content.classList.remove('active');
-                icon.textContent = '+';
-            } else {
-                content.classList.add('active');
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
                 icon.textContent = '−';
+            } else {
+                content.style.display = 'none';
+                icon.textContent = '+';
             }
         }
 
-        // Save Record Functionality
+        // Save Record Functionality with Strict Validation
         function handleSaveRecord(event) {
             event.preventDefault();
             
+            const partyInput = document.getElementById('partyName');
+            const containerInput = document.getElementById('containerNo');
             const ticketInput = document.getElementById('ticketNoInput');
-            const currentTicket = ticketInput.value;
-
-            alert(`Record for Ticket #${currentTicket} saved and synced successfully!`);
             
-            // Auto increment ticket number after save
+            // Remove previous error states
+            partyInput.classList.remove('error');
+            containerInput.classList.remove('error');
+
+            const partyVal = partyInput.value.trim();
+            const containerVal = containerInput.value.trim();
+
+            // Strict Validation: Prevent empty submissions
+            if (!partyVal || !containerVal) {
+                let missing = [];
+                if (!partyVal) {
+                    partyInput.classList.add('error');
+                    missing.push("Party Name");
+                }
+                if (!containerVal) {
+                    containerInput.classList.add('error');
+                    missing.push("Container No.");
+                }
+                
+                alert(`⚠️ Cannot save empty record! Please fill in the required field(s): ${missing.join(', ')}.`);
+                return; // STOP execution: Ticket number will NOT change!
+            }
+
+            const currentTicket = ticketInput.value;
+            alert(`✅ Record for Ticket #${currentTicket} saved and synced successfully!`);
+            
+            // Auto increment ticket number ONLY after valid save
             let numericVal = parseInt(currentTicket);
             if (!isNaN(numericVal)) {
                 ticketInput.value = numericVal + 1;
             }
+
+            // Clear inputs after successful save
+            partyInput.value = '';
+            containerInput.value = '';
         }
 
         // Clear Form Functionality
         function clearForm() {
             document.getElementById('claimsForm').reset();
+            document.getElementById('partyName').classList.remove('error');
+            document.getElementById('containerNo').classList.remove('error');
             document.getElementById('ticketNoInput').value = "9156";
         }
 
