@@ -7,8 +7,9 @@
     <style>
         :root {
             --primary-dark: #0f172a;
-            --primary-blue: #2563eb;
-            --bg-light: #f8fafc;
+            --primary-blue: #0f2b48;
+            --accent-blue: #2563eb;
+            --bg-light: #eef2f6;
             --card-bg: #ffffff;
             --border-color: #cbd5e1;
             --text-dark: #1e293b;
@@ -16,42 +17,57 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f1f5f9; color: var(--text-dark); padding-bottom: 50px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-light); color: var(--text-dark); padding-bottom: 60px; }
 
-        /* Top Header Action Bar */
-        header { background-color: var(--primary-dark); color: #ffffff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .header-title h1 { font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        /* Header Bar */
+        header { background-color: #0d2137; color: #ffffff; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .header-title h1 { font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
         .header-title h1::after { content: '•'; color: #f59e0b; }
-        .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .status-badge { display: inline-flex; align-items: center; gap: 6px; color: #4ade80; font-weight: 500; }
-        .status-dot { width: 7px; height: 7px; background-color: #4ade80; border-radius: 50%; }
+        .status-dot { width: 7px; height: 7px; background-color: #22c55e; border-radius: 50%; box-shadow: 0 0 6px rgba(34, 197, 94, 0.6); }
 
-        /* Actions / Buttons */
-        .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        /* Header Buttons */
+        .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .btn { padding: 8px 16px; border-radius: 6px; font-size: 0.825rem; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; transition: all 0.2s; }
-        .btn-outline { background-color: rgba(255,255,255,0.08); color: #ffffff; border: 1px solid rgba(255,255,255,0.2); }
-        .btn-outline:hover { background-color: rgba(255,255,255,0.18); }
-        .btn-warning { background-color: #f59e0b; color: #000000; }
-        .btn-warning:hover { background-color: #d97706; }
-        .btn-primary { background-color: #1d4ed8; color: #ffffff; }
-        .btn-primary:hover { background-color: #1e40af; }
-        .btn-success { background-color: #059669; color: #ffffff; }
-        .btn-success:hover { background-color: #047857; }
+        .btn-navy { background-color: #17385c; color: #ffffff; border: 1px solid rgba(255,255,255,0.15); }
+        .btn-navy:hover { background-color: #204875; }
+        .btn-gold { background-color: #f59e0b; color: #000000; }
+        .btn-gold:hover { background-color: #d97706; }
+        .btn-blue { background-color: #1d4ed8; color: #ffffff; }
+        .btn-blue:hover { background-color: #1e40af; }
+        .btn-green { background-color: #059669; color: #ffffff; }
+        .btn-green:hover { background-color: #047857; }
 
-        /* Layout Main Container */
+        /* Main Container */
         .container { max-width: 1240px; margin: 24px auto; padding: 0 20px; }
-        
-        /* Accordion / Card Form Sections */
-        .form-section { background-color: var(--card-bg); border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow: hidden; }
-        .section-header { padding: 14px 20px; background-color: #ffffff; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.95rem; color: var(--primary-dark); cursor: pointer; }
-        .form-grid { padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+
+        /* Accordion Cards */
+        .form-section { background-color: var(--card-bg); border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); overflow: hidden; }
+        .section-header { padding: 14px 20px; background-color: #ffffff; display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.925rem; color: #0f2b48; cursor: pointer; user-select: none; transition: background-color 0.2s; }
+        .section-header:hover { background-color: #f8fafc; }
+        .toggle-icon { font-weight: 800; font-size: 1.1rem; color: #0f2b48; width: 20px; text-align: center; }
+
+        .form-content { display: none; padding: 20px; border-top: 1px solid #f1f5f9; }
+        .form-content.active { display: block; }
+
+        /* Grid Layout */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
 
         /* Form Inputs */
         .form-group { display: flex; flex-direction: column; gap: 6px; }
         .form-group label { font-size: 0.725rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
         .form-group label span.req { color: #ef4444; }
-        .form-control { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.875rem; outline: none; background-color: #ffffff; transition: border 0.2s; }
-        .form-control:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
+        .form-control { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.875rem; outline: none; background-color: #ffffff; transition: border 0.2s, box-shadow 0.2s; }
+        .form-control:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+        /* Bottom Action Panel */
+        .form-footer-actions { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 0 4px; }
+        .btn-save { background-color: #0f2b48; color: #ffffff; padding: 10px 24px; font-size: 0.9rem; font-weight: 700; border-radius: 6px; border: none; cursor: pointer; transition: background-color 0.2s; }
+        .btn-save:hover { background-color: #1a426e; }
+        .btn-clear { background-color: #ffffff; color: #334155; border: 1px solid #cbd5e1; padding: 10px 24px; font-size: 0.9rem; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background-color 0.2s; }
+        .btn-clear:hover { background-color: #f1f5f9; }
+        .version-tag { margin-top: 16px; font-size: 0.75rem; color: #94a3b8; text-align: center; }
     </style>
 </head>
 <body>
@@ -61,186 +77,249 @@
         <div class="header-title">
             <h1>Claims Register</h1>
             <div class="header-subtitle">
-                <span>4417 records</span> • 
-                <span>Open claims: 463 containers</span> • 
-                <span>Total: 5515</span> • 
+                <span>4427 records</span> • 
+                <span>Open claims: 473 containers</span> • 
+                <span>Total: 5525</span> • 
                 <span class="status-badge"><span class="status-dot"></span> Synced to Google Sheet</span>
             </div>
         </div>
 
         <div class="header-actions">
-            <!-- Sync Button (API connected) -->
-            <button class="btn btn-outline" id="syncBtn" onclick="triggerSync()">
-                ⚙ Sync
-            </button>
-            
-            <button class="btn btn-warning">+ New Entry</button>
-            <button class="btn btn-primary">Register (4417)</button>
-            <button class="btn btn-primary">↑ Import Excel</button>
-            <button class="btn btn-success">↓ Export Excel</button>
+            <button class="btn btn-navy" id="syncBtn" onclick="triggerSync()">⚙ Sync</button>
+            <button class="btn btn-navy" onclick="location.reload()">🔄 Refresh</button>
+            <button class="btn btn-gold">+ New Entry</button>
+            <button class="btn btn-blue">Register (4427)</button>
+            <button class="btn btn-blue">↑ Import Excel</button>
+            <button class="btn btn-green">↓ Export Excel</button>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="container">
-        
-        <!-- Party & Ownership Section -->
-        <div class="form-section">
-            <div class="section-header">
-                <span>Party & Ownership</span>
-                <span>−</span>
+    <!-- Main Container Form -->
+    <form id="claimsForm" onsubmit="handleSaveRecord(event)">
+        <div class="container">
+            
+            <!-- 1. Party & Ownership Section -->
+            <div class="form-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>Party & Ownership</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="form-content">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Party Name <span class="req">*</span></label>
+                            <input type="text" class="form-control" placeholder="Type to search or add new...">
+                        </div>
+                        <div class="form-group">
+                            <label>Party Type</label>
+                            <select class="form-control">
+                                <option>— Select —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Country</label>
+                            <input type="text" class="form-control" placeholder="Type to search or add new...">
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" class="form-control" placeholder="Type to search or add new...">
+                        </div>
+                        <div class="form-group">
+                            <label>Relationship Manager</label>
+                            <input type="text" class="form-control" placeholder="Type to search or add new...">
+                        </div>
+                        <div class="form-group">
+                            <label>Claims Owner</label>
+                            <input type="text" class="form-control" placeholder="Type to search or add new...">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Party Name <span class="req">*</span></label>
-                    <input type="text" class="form-control" placeholder="Type to search or add new...">
-                </div>
-                <div class="form-group">
-                    <label>Party Type</label>
-                    <select class="form-control">
-                        <option>— Select —</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Country</label>
-                    <input type="text" class="form-control" placeholder="Type to search or add new...">
-                </div>
-                <div class="form-group">
-                    <label>Location</label>
-                    <input type="text" class="form-control" placeholder="Type to search or add new...">
-                </div>
-                <div class="form-group">
-                    <label>Relationship Manager</label>
-                    <input type="text" class="form-control" placeholder="Type to search or add new...">
-                </div>
-                <div class="form-group">
-                    <label>Claims Owner</label>
-                    <input type="text" class="form-control" placeholder="Type to search or add new...">
-                </div>
-            </div>
-        </div>
 
-        <!-- Shipment Section -->
-        <div class="form-section">
-            <div class="section-header">
-                <span>Shipment</span>
-                <span>+</span>
+            <!-- 2. Shipment Section -->
+            <div class="form-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>Shipment</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="form-content">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Container No.</label>
+                            <input type="text" class="form-control" placeholder="Enter container number...">
+                        </div>
+                        <div class="form-group">
+                            <label>BL / HBL No.</label>
+                            <input type="text" class="form-control" placeholder="Enter BL number...">
+                        </div>
+                        <div class="form-group">
+                            <label>Vessel Name</label>
+                            <input type="text" class="form-control" placeholder="Enter vessel name...">
+                        </div>
+                        <div class="form-group">
+                            <label>ETA Date</label>
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Claim Details Section -->
-        <div class="form-section">
-            <div class="section-header">
-                <span>Claim Details</span>
-                <span>−</span>
+            <!-- 3. Claim Details Section -->
+            <div class="form-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>Claim Details</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="form-content">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Claim Date</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Nature of Claim</label>
+                            <select class="form-control">
+                                <option>— Select —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Claim Sub Group</label>
+                            <select class="form-control">
+                                <option>— Select —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Type of Issue</label>
+                            <select class="form-control">
+                                <option>— Select —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Stage</label>
+                            <select class="form-control">
+                                <option>— Select —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control">
+                                <option>— Select —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ticket No.</label>
+                            <input type="text" id="ticketNoInput" class="form-control" value="9156">
+                        </div>
+                        <div class="form-group">
+                            <label>Major Defects %</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Minor Defects %</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Short Qty</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Broken Crates</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Inspection Date</label>
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Claim Date</label>
-                    <input type="date" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Nature of Claim</label>
-                    <select class="form-control">
-                        <option>— Select —</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Claim Sub Group</label>
-                    <select class="form-control">
-                        <option>— Select —</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Type of Issue</label>
-                    <select class="form-control">
-                        <option>— Select —</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Stage</label>
-                    <select class="form-control">
-                        <option>— Select —</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Status</label>
-                    <select class="form-control">
-                        <option>— Select —</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Ticket No.</label>
-                    <input type="text" id="ticketNoInput" class="form-control" value="9156">
-                </div>
-                <div class="form-group">
-                    <label>Major Defects %</label>
-                    <input type="text" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Minor Defects %</label>
-                    <input type="text" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Short Qty</label>
-                    <input type="text" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Broken Crates</label>
-                    <input type="text" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Inspection Date</label>
-                    <input type="date" class="form-control">
-                </div>
-            </div>
-        </div>
 
-        <!-- Financials Section -->
-        <div class="form-section">
-            <div class="section-header">
-                <span>Financials</span>
-                <span>+</span>
+            <!-- 4. Financials Section -->
+            <div class="form-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>Financials</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="form-content">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Claim Value ($)</label>
+                            <input type="number" step="0.01" class="form-control" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Settled Amount ($)</label>
+                            <input type="number" step="0.01" class="form-control" placeholder="0.00">
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Detention, Closure & Remarks Section -->
-        <div class="form-section">
-            <div class="section-header">
-                <span>Detention, Closure & Remarks</span>
-                <span>+</span>
+            <!-- 5. Detention, Closure & Remarks Section -->
+            <div class="form-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>Detention, Closure & Remarks</span>
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="form-content">
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Remarks / Notes</label>
+                            <textarea class="form-control" rows="3" placeholder="Enter claim remarks..."></textarea>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-    </div>
+            <!-- Bottom Save / Clear Action Buttons -->
+            <div class="form-footer-actions">
+                <button type="submit" class="btn-save">Save Record</button>
+                <button type="button" class="btn-clear" onclick="clearForm()">Clear</button>
+            </div>
+
+            <div class="version-tag">Page version 3 • ticket no. shown before saving</div>
+
+        </div>
+    </form>
 
     <!-- JavaScript Handling -->
     <script>
-        // Function to fetch or load the next ticket number automatically on page load
-        async function fetchNextTicketNumber() {
-            const ticketInput = document.getElementById('ticketNoInput');
+        // Accordion Toggle logic (+ / - signs)
+        function toggleSection(headerElement) {
+            const content = headerElement.nextElementSibling;
+            const icon = headerElement.querySelector('.toggle-icon');
             
-            try {
-                // If you hook up an API endpoint later, replace or uncomment below:
-                // const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL');
-                // const data = await response.json();
-                // if (data && data.nextTicket) {
-                //     ticketInput.value = data.nextTicket;
-                // } else {
-                //     ticketInput.value = "9156";
-                // }
-                
-                ticketInput.value = "9156";
-            } catch (error) {
-                console.error("Could not fetch live ticket number, using fallback:", error);
-                ticketInput.value = "9156";
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.textContent = '+';
+            } else {
+                content.classList.add('active');
+                icon.textContent = '−';
             }
         }
 
-        // Run on page load
-        window.addEventListener('DOMContentLoaded', fetchNextTicketNumber);
+        // Save Record Functionality
+        function handleSaveRecord(event) {
+            event.preventDefault();
+            
+            const ticketInput = document.getElementById('ticketNoInput');
+            const currentTicket = ticketInput.value;
 
-        // Sync Button function
+            alert(`Record for Ticket #${currentTicket} saved and synced successfully!`);
+            
+            // Auto increment ticket number after save
+            let numericVal = parseInt(currentTicket);
+            if (!isNaN(numericVal)) {
+                ticketInput.value = numericVal + 1;
+            }
+        }
+
+        // Clear Form Functionality
+        function clearForm() {
+            document.getElementById('claimsForm').reset();
+            document.getElementById('ticketNoInput').value = "9156";
+        }
+
+        // Header API Sync Trigger
         function triggerSync() {
             const syncBtn = document.getElementById('syncBtn');
             syncBtn.innerText = "⚙ Syncing...";
@@ -248,7 +327,6 @@
             setTimeout(() => {
                 alert("API Sync triggered successfully!");
                 syncBtn.innerText = "⚙ Sync";
-                fetchNextTicketNumber();
             }, 800);
         }
     </script>
