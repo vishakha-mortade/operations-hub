@@ -89,6 +89,30 @@
 </head>
 <body>
 
+    <!-- Shared Input Datalists for Search & Auto-complete -->
+    <datalist id="partyNameList">
+        <option value="BSL LOGISTICS CORP"></option>
+        <option value="Bajaj Allianz General Insurance Company"></option>
+        <option value="Balmer Lawrie"></option>
+        <option value="CAPELINE SHIPPING -GOLDEN - (SD)"></option>
+        <option value="BKS IMPEX"></option>
+        <option value="IMPERIAL FRUITS"></option>
+        <option value="INDU ENTERPRISES"></option>
+    </datalist>
+
+    <datalist id="relManagerList">
+        <option value="Hriday"></option>
+        <option value="Sharad"></option>
+        <option value="Shubha"></option>
+        <option value="Tarun"></option>
+    </datalist>
+
+    <datalist id="claimsOwnerList">
+        <option value="Deepa Pujara Corporate Office"></option>
+        <option value="Tarun Arora"></option>
+        <option value="ZOHO Project"></option>
+    </datalist>
+
     <!-- Header Action Bar -->
     <header>
         <div class="header-title">
@@ -134,7 +158,7 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Party Name <span class="req">*</span></label>
-                                <input type="text" id="partyName" class="form-control" placeholder="Type to search or add new...">
+                                <input type="text" id="partyName" list="partyNameList" class="form-control" placeholder="Type to search or add new...">
                             </div>
                             <div class="form-group">
                                 <label>Party Type</label>
@@ -159,11 +183,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Relationship Manager</label>
-                                <input type="text" class="form-control" placeholder="Type to search or add new...">
+                                <input type="text" list="relManagerList" class="form-control" placeholder="Type to search or add new...">
                             </div>
                             <div class="form-group">
                                 <label>Claims Owner</label>
-                                <input type="text" class="form-control" placeholder="Type to search or add new...">
+                                <input type="text" list="claimsOwnerList" class="form-control" placeholder="Type to search or add new...">
                             </div>
                         </div>
                     </div>
@@ -235,8 +259,25 @@
                                 <label>Claim Sub Group</label>
                                 <select class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
-                                    <option>Internal QC</option>
-                                    <option>Destination QC</option>
+                                    <option>BROKEN CRATES</option>
+                                    <option>CHARGES NOT AS PER CONTRAT</option>
+                                    <option>DETENTION</option>
+                                    <option>EXCESS PAYMENT</option>
+                                    <option>FSSAI/ PQ ISSUE</option>
+                                    <option>OTHERS</option>
+                                    <option>PORT PLUGIN CHARGES</option>
+                                    <option>QUALITY ISSUE</option>
+                                    <option>SECURITY DEPOSIT</option>
+                                    <option>SHORT QUANTITY</option>
+                                    <option>BROKEN CRATES, SHORT QUANTITY</option>
+                                    <option>CARTON/BOXES DAMAGED</option>
+                                    <option>CFS NOMINATION</option>
+                                    <option>CHARGES NOT AS PER CONTRACT</option>
+                                    <option>COLOUR</option>
+                                    <option>DAMAGE</option>
+                                    <option>DAMAGE CONTAINER</option>
+                                    <option>DELAY IN CLEARANCE</option>
+                                    <option>DELAY IN CLEARANCE BY CHA</option>
                                     <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
@@ -244,8 +285,23 @@
                                 <label>Type of Issue</label>
                                 <select class="form-control" onchange="handleDropdownAdd(this)">
                                     <option>— Select —</option>
-                                    <option>Rotten / Decay</option>
-                                    <option>Soft Fruit</option>
+                                    <option>QUALITY ISSUE</option>
+                                    <option>SHORT QUANTITY</option>
+                                    <option>POOR QUALITY BINS</option>
+                                    <option>SECURITY DEPOSIT</option>
+                                    <option>DELAYED IN CLEARANCE</option>
+                                    <option>DELAYED IN CLEARANCE - TRANSPORT CFS</option>
+                                    <option>CHARGES NOT AGREED</option>
+                                    <option>QUALITY & CARTON/BOXES DAMAGED</option>
+                                    <option>DAMAGED BOXES/CRATES</option>
+                                    <option>IGM ISSUE</option>
+                                    <option>ACCIDENT/CONTAINER</option>
+                                    <option>DETENTION CHARGES</option>
+                                    <option>OLD DAMAGE</option>
+                                    <option>Accident</option>
+                                    <option>Accident/Container</option>
+                                    <option>CHARGES NOT AS PER CONTRACT</option>
+                                    <option>Charges not Agreed</option>
                                     <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
@@ -256,8 +312,11 @@
                                     <option>CLOSED</option>
                                     <option>COST SHEET SUBMITTED</option>
                                     <option>COST SHEET PENDING</option>
+                                    <option>COST SHEET PENDING/NOTE OF RESERVE ISSUED</option>
                                     <option>CREDIT NOTE PENDING</option>
                                     <option>CREDIT NOTE RECEIVED</option>
+                                    <option>Credit note received - ($2,240)</option>
+                                    <option>return swift copy received, Credit note received USD 23,589.75 in total for SEGU9758285+SEGU9821921</option>
                                     <option style="color: #2563eb; font-weight: bold;">+ Add new...</option>
                                 </select>
                             </div>
@@ -533,15 +592,13 @@
                 let newItem = prompt("Enter new option value:");
                 if (newItem && newItem.trim() !== "") {
                     let formattedItem = newItem.trim();
-                    // Create new option element
                     let opt = document.createElement('option');
                     opt.value = formattedItem;
                     opt.textContent = formattedItem.toUpperCase();
-                    // Insert before the "+ Add new..." option
                     selectElement.insertBefore(opt, selectElement.lastElementChild);
-                    selectElement.value = formattedItem.toUpperCase();
+                    selectElement.value = formattedItem;
                 } else {
-                    selectElement.selectedIndex = 0; // reset if canceled
+                    selectElement.selectedIndex = 0;
                 }
             }
         }
