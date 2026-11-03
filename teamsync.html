@@ -96,7 +96,8 @@
     <button class="hbtn active" id="tabEntry" onclick="newEntry()">+ New Entry</button>
     <button class="hbtn" id="tabRegister" onclick="switchView('register')">Register (<span id="regCount">0</span>)</button>
     <button class="hbtn import" onclick="document.getElementById('importFile').click()">&#11014; Import Excel</button>
-    <button class="hbtn export" onclick="exportExcel()">&#11015; Export Excel</button>
+    <button class="hbtn export" onclick="exportExcel('xlsx')">&#11015; Export Excel</button>
+    <button class="hbtn export" onclick="exportExcel('csv')">&#11015; Export CSV</button>
     <input type="file" id="importFile" accept=".xlsx,.xls,.csv" style="display:none" onchange="importExcel(event)">
   </div>
 </header>
@@ -112,7 +113,7 @@
       <button class="btn-primary" id="saveBtn" onclick="saveRecord()">Save Record</button>
       <button class="btn-secondary" onclick="clearForm()">Clear</button>
     </div>
-    <p class="pagever">Page version 4 · ticket no. shown before saving</p>
+    <p class="pagever">Page version 5 · ticket no. shown before saving</p>
   </div>
 
   <div id="viewRegister" style="display:none">
@@ -727,9 +728,14 @@ function switchView(v) {
 }
 // "+ New Entry": back to the entry form, leave any edit, show the next free ticket no.
 function newEntry() {
-  if (editingRef) clearForm();          // leaving an edit -> blank form (nothing is saved or changed)
+  if (saving) return;
+  if (!editingRef) {
+    // ask before throwing away a half-filled NEW entry (the ticket box alone doesn't count)
+    const typed = ALL_FIELDS.some(k => k !== "Ticket no." && (document.getElementById(fid(k)).value || "").trim() && document.getElementById(fid(k)).value !== "__add__");
+    if (typed && !confirm("Clear the unsaved entry and start a new one?")) { switchView("entry"); return; }
+  }
+  clearForm();                          // blank form + fetches the next free ticket no. (nothing in the Sheet is changed)
   switchView("entry");
-  prefillTicket(false);                 // refresh the next free ticket no. from the Sheet
   window.scrollTo(0, 0);
   const first = document.getElementById(fid("Party Name"));
   if (first) first.focus();
@@ -845,7 +851,8 @@ function displayDate(d) {
 // ---------------- Export ----------------
 const NUMBER_FIELDS = SECTIONS.flatMap(s => s.fields).filter(f => f.type === "number").map(f => f.key);
 
-async function exportExcel() {
+async function exportExcel(format) {
+  const asCsv = format === "csv";
   if (typeof XLSX === "undefined") { toast("Excel library not loaded — connect to the internet once and reload", true); return; }
   if (syncUrl) {
     toast("Getting the latest data from Google Sheet…");
@@ -871,7 +878,17 @@ async function exportExcel() {
   ws["!cols"] = EXPORT_COLUMNS.map(c => ({ wch: Math.max(12, Math.min(c.length + 4, 28)) }));
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Claims Register");
-  XLSX.writeFile(wb, "Claims_Register_" + todayStr() + ".xlsx");
+  if (asCsv) {
+    // CSV with UTF-8 marker so Excel shows names/symbols correctly
+    const blob = new Blob(["\uFEFF" + XLSX.utils.sheet_to_csv(ws)], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "Claims_Register_" + todayStr() + ".csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  } else {
+    XLSX.writeFile(wb, "Claims_Register_" + todayStr() + ".xlsx");
+  }
   toast("Exported " + records.length + " record" + (records.length > 1 ? "s" : ""));
 }
 
