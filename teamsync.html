@@ -35,6 +35,8 @@
   .field input, .field select, .field textarea { width: 100%; padding: 8px 10px; font-size: 13.5px; border: 1px solid #cbd5e1; border-radius: 5px; background: #fff; color: #1e293b; font-family: inherit; }
   .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #f0b429; box-shadow: 0 0 0 2px rgba(240,180,41,.25); }
   .field.wide { grid-column: 1 / -1; }
+  input.locked { background: #f1f5f9; color: #0f2a4a; font-weight: 700; cursor: not-allowed; }
+  .tickethint.err { color: #dc2626; }
   .tickethint { font-size: 11px; margin-top: 4px; color: #64748b; }
   .tickethint.ok { color: #059669; }
   .tickethint.warn { color: #b45309; }
@@ -113,7 +115,7 @@
       <button class="btn-primary" id="saveBtn" onclick="saveRecord()">Save Record</button>
       <button class="btn-secondary" onclick="clearForm()">Clear</button>
     </div>
-    <p class="pagever">Page version 5 · ticket no. shown before saving</p>
+    <p class="pagever">Page version 6 · ticket no. locked to Google Sheet</p>
   </div>
 
   <div id="viewRegister" style="display:none">
@@ -177,7 +179,7 @@ const SECTIONS = [
   ]},
   { title: "Shipment", fields: [
     { key: "BL No.", type: "text" },
-    { key: "Container no.", type: "text" },
+    { key: "Container no.", type: "text", req: true },
     { key: "No. Of Containers", type: "number" },
     { key: "ETA", type: "date" },
     { key: "Product", type: "combo" },
@@ -497,9 +499,7 @@ function nextNumberFor(fieldKey, baseline) {
   });
   return String(max + 1);
 }
-// Ticket no. is ALWAYS shown while you fill the form:
-//  1) instantly: next number worked out from the data already on the page
-//  2) a moment later: the confirmed next free number from the Google Sheet
+// Ticket no. is LOCKED: nobody can type it. Only the next free number from the Google Sheet is shown.
 // The Sheet checks it again on save: if someone saved that number a moment earlier, you get the next one.
 let ticketReq = 0;
 function setTicketHint(text, cls) {
@@ -510,33 +510,20 @@ async function prefillTicket(force) {
   if (editingRef) return;
   const t = document.getElementById(fid("Ticket no."));
   if (!t) return;
-  if (force) { t.value = ""; t.dataset.auto = "1"; }
-  if (t.value.trim() && !t.dataset.auto) return;            // you typed your own number - keep it
-
-  // step 1: show a number right away so the box is never empty
-  const local = nextNumberFor("Ticket no.", 8898);
-  if (!t.value.trim() || t.dataset.auto) {
-    if (!t.value.trim() || Number(local) > Number(t.value)) t.value = local;
-    t.dataset.auto = "1";
-    setTicketHint("Checking with Google Sheet…", "warn");
-  }
-
-  // step 2: ask the Sheet for the confirmed next free number
-  if (!syncUrl) { setTicketHint("Estimated (Sheet not connected)", "warn"); return; }
+  if (!syncUrl) { t.value = ""; setTicketHint("Google Sheet not connected", "err"); return; }
+  if (force || !t.value.trim()) { t.value = ""; setTicketHint("Getting next ticket no. from Google Sheet…", "warn"); }
   const myReq = ++ticketReq;
   let next = "";
   try {
     const r = await (await fetch(syncUrl + (syncUrl.includes("?") ? "&" : "?") + "action=nextTicket")).json();
     if (r && r.ticket) next = String(r.ticket);
-  } catch (e) { /* keep the estimate */ }
+  } catch (e) { /* handled below */ }
   if (myReq !== ticketReq || editingRef) return;             // a newer request or an edit took over
-  if (t.value.trim() && !t.dataset.auto) return;
   if (next) {
     t.value = next;
-    t.dataset.auto = "1";
-    setTicketHint("✓ Next free number from Google Sheet", "ok");
-  } else {
-    setTicketHint("Estimated — the Sheet will confirm it on save", "warn");
+    setTicketHint("🔒 Next free number from Google Sheet", "ok");
+  } else if (!t.value.trim()) {
+    setTicketHint("Couldn't reach Google Sheet — click Refresh", "err");
   }
 }
 function toast(msg, isErr) {
@@ -583,10 +570,10 @@ function watchTicketTyping() {
   const h = document.createElement("div");
   h.id = "ticketHint"; h.className = "tickethint";
   t.insertAdjacentElement("afterend", h);
-  t.addEventListener("input", () => {
-    delete t.dataset.auto;
-    setTicketHint(t.value.trim() ? "Your own number — the Sheet checks it isn't already used" : "Required", t.value.trim() ? "" : "warn");
-  });
+  t.readOnly = true;
+  t.tabIndex = -1;
+  t.classList.add("locked");
+  t.placeholder = "From Google Sheet";
 }
 function toggleSec(i) {
   const b = document.getElementById("secBody" + i);
@@ -631,10 +618,18 @@ async function saveRecord() {
   if (saving) return;
   const f = readForm();
   if (!f["Party Name"]) { toast("Party Name is required", true); return; }
-  if (!f["Ticket no."]) {
+  if (!editingRef && !f["Container no."]) {
+    toast("Container no. is required", true);
+    const c = document.getElementById(fid("Container no."));
+    const body = c.closest(".sec-body");
+    if (body && body.classList.contains("hidden")) toggleSec(Number(body.id.replace("secBody", "")));
+    c.focus();
+    return;
+  }
+  if (!editingRef && !f["Ticket no."]) {
     await prefillTicket(true);
     f["Ticket no."] = document.getElementById(fid("Ticket no.")).value.trim();
-    if (!f["Ticket no."]) { toast("Ticket no. is required", true); return; }
+    if (!f["Ticket no."]) { toast("Ticket no. not received from Google Sheet — check internet and click Refresh", true); return; }
   }
   if (!syncUrl) { toast("Connect the Google Sheet first (⚙ Sync) — records are stored in the Sheet", true); return; }
 
@@ -691,8 +686,7 @@ function editRecord(ref) {
     el.value = v;
   });
   editingRef = ref;
-  delete document.getElementById(fid("Ticket no.")).dataset.auto;
-  setTicketHint("This claim's ticket no.", "");
+  setTicketHint(r["Ticket no."] ? "🔒 This claim's ticket no." : "🔒 Google Sheet will give this claim a ticket no. on update", "");
   document.getElementById("editingRefLabel").textContent = ref;
   document.getElementById("editbar").style.display = "flex";
   document.getElementById("saveBtn").textContent = "Update Record";
