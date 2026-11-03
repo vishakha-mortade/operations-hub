@@ -93,7 +93,7 @@
   <div class="hbtns">
     <button class="hbtn" onclick="setupSync()" id="syncSetupBtn">&#9881; Sync</button>
     <button class="hbtn" onclick="syncPullAll(true)">&#128260; Refresh</button>
-    <button class="hbtn active" id="tabEntry" onclick="switchView('entry')">+ New Entry</button>
+    <button class="hbtn active" id="tabEntry" onclick="newEntry()">+ New Entry</button>
     <button class="hbtn" id="tabRegister" onclick="switchView('register')">Register (<span id="regCount">0</span>)</button>
     <button class="hbtn import" onclick="document.getElementById('importFile').click()">&#11014; Import Excel</button>
     <button class="hbtn export" onclick="exportExcel()">&#11015; Export Excel</button>
@@ -112,7 +112,7 @@
       <button class="btn-primary" id="saveBtn" onclick="saveRecord()">Save Record</button>
       <button class="btn-secondary" onclick="clearForm()">Clear</button>
     </div>
-    <p class="pagever">Page version 3 · ticket no. shown before saving</p>
+    <p class="pagever">Page version 4 · ticket no. shown before saving</p>
   </div>
 
   <div id="viewRegister" style="display:none">
@@ -269,19 +269,24 @@ function persist() {
 
 // ---------------- Google Sheets sync ----------------
 const SYNC_KEY = "claims-register-sync-url";
-let syncUrl = localStorage.getItem(SYNC_KEY) || "";
+// Company Google Sheet link - built in, so nobody has to paste it when opening the page.
+// (If someone saves a different link with ⚙ Sync, that one is used on their browser instead.)
+const DEFAULT_SYNC_URL = "https://script.google.com/macros/s/AKfycbzQkqG0NP2zUinSmzfMKUXYIFBywfByy4yghYrBukQEySJPtu3svM1ADOSYTC6E9cXFrQ/exec";
+let savedSync = null;
+try { savedSync = localStorage.getItem(SYNC_KEY); } catch (e) { /* storage blocked - use built-in link */ }
+let syncUrl = (savedSync && savedSync.trim()) ? savedSync.trim() : DEFAULT_SYNC_URL;
 let syncBusy = false;
 let lastPull = 0;
 let saving = false;
 
 function setupSync() {
   const v = prompt(
-    "Paste your Google Apps Script Web App URL here (it ends with /exec).\n\nTo disconnect sync, clear the box and press OK.",
+    "Google Apps Script Web App URL (ends with /exec).\n\nThe company link is built in. Clear the box and press OK to go back to it.",
     syncUrl
   );
   if (v === null) return;
-  syncUrl = v.trim();
-  localStorage.setItem(SYNC_KEY, syncUrl);
+  syncUrl = v.trim() || DEFAULT_SYNC_URL;
+  try { localStorage.setItem(SYNC_KEY, syncUrl === DEFAULT_SYNC_URL ? "" : syncUrl); } catch (e) {}
   if (syncUrl) { toast("Sync connected — loading data from Google Sheet…"); syncPullAll(true); }
   else { toast("Sync disconnected — working locally only"); refreshStats(); }
 }
@@ -719,6 +724,15 @@ function switchView(v) {
   document.getElementById("tabRegister").classList.toggle("active", v === "register");
   if (v === "register") { populateFilters(); renderTable(); }
   if (v === "entry") prefillTicket(false);
+}
+// "+ New Entry": back to the entry form, leave any edit, show the next free ticket no.
+function newEntry() {
+  if (editingRef) clearForm();          // leaving an edit -> blank form (nothing is saved or changed)
+  switchView("entry");
+  prefillTicket(false);                 // refresh the next free ticket no. from the Sheet
+  window.scrollTo(0, 0);
+  const first = document.getElementById(fid("Party Name"));
+  if (first) first.focus();
 }
 function containerCount(r) { return parseFloat(r["No. Of Containers"]) || 0; }
 
